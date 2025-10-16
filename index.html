@@ -1,0 +1,167 @@
+<script>
+/* ---------- Data & State ---------- */
+const SETS = 3;
+const labels = [
+  ['Music','English','Cities'],
+  ['English','Countries','English'],
+  ['Sport','English','Famous People']
+];
+
+// POOL of Qs (placeholder — replace with your curated content)
+const POOL = {
+  'Music': [
+    {type:'mcq',q:'Which band is from Liverpool?',opts:['Oasis','The Beatles','Coldplay'],a:1},
+    {type:'mcq',q:'Fur Elise composer?',opts:['Mozart','Beethoven','Vivaldi'],a:1},
+    {type:'gap',q:'She ___ to the shop yesterday. (go)',a:'went'},
+    {type:'mcq',q:'Tempo refers to?',opts:['Speed','Pitch','Style'],a:0},
+    {type:'match',q:'Match instrument to family',pairs:[['Guitar','Strings'],['Trumpet','Brass'],['Violin','Strings']]}],
+  'Cities': [ /* ... */ ],
+  'Countries': [ /* ... */ ],
+  'Sport': [ /* ... */ ],
+  'Famous People': [ /* ... */ ],
+  'English_use': [ /* ... */ ],
+  'English_similar': [ /* ... */ ],
+  'English_vocab': [ /* ... */ ],
+  'English_collocations': [ /* ... */ ]
+};
+
+// For demo fill some missing quickly: (minimal)
+POOL['Cities'] = [{type:'mcq',q:'Capital of France?',opts:['Paris','Rome','Berlin'],a:0},{type:'gap',q:'Capital of Portugal is ___',a:'Lisbon'},{type:'mcq',q:'Big Apple refers to?',opts:['NYC','LA','Chicago'],a:0},{type:'mcq',q:'Capital of Japan?',opts:['Seoul','Tokyo','Beijing'],a:1},{type:'match',q:'Match city-country',pairs:[['Lisbon','Portugal'],['Tokyo','Japan'],['Paris','France']]}];
+POOL['Countries'] = [{type:'mcq',q:'Largest by area?',opts:['Canada','Russia','USA'],a:1},{type:'gap',q:'Madeira belongs to ___',a:'Portugal'},{type:'mcq',q:'Maple leaf country?',opts:['Canada','USA','UK'],a:0},{type:'match',q:'Match country-continent',pairs:[['Brazil','South America'],['Italy','Europe'],['Australia','Oceania']]},{type:'mcq',q:'Canberra is capital of?',opts:['Australia','Austria','Argentina'],a:0}];
+POOL['Sport'] = [{type:'mcq',q:'Wimbledon sport?',opts:['Football','Tennis','Cricket'],a:1},{type:'gap',q:'Score zero in tennis is ___',a:'Love'},{type:'mcq',q:'How many players in football team?',opts:['9','10','11'],a:2},{type:'match',q:'Match sport-equipment',pairs:[['Tennis','Racket'],['Cricket','Bat'],['Football','Ball']]},{type:'mcq',q:'Shuttlecock used in?',opts:['Tennis','Badminton','Squash'],a:1}];
+POOL['Famous People'] = [{type:'mcq',q:'Author of Hamlet?',opts:['Shakespeare','Homer','Dante'],a:0},{type:'gap',q:'Scientist of relativity: ___ Einstein',a:'Albert'},{type:'mcq',q:'Mona Lisa painter?',opts:['Da Vinci','Van Gogh','Picasso'],a:0},{type:'match',q:'Match person-field',pairs:[['Churchill','Politics'],['Einstein','Science'],['Monet','Art']]},{type:'mcq',q:'First woman to fly Atlantic?',opts:['Amelia Earhart','Marie Curie','Rosa Parks'],a:0}];
+POOL['English_use'] = [{type:'gap',q:'He insisted ___ paying',a:'on'},{type:'gap',q:'She ___ to the shop (go)',a:'went'},{type:'mcq',q:'Passive: The bridge ___ in 1995',opts:['built','was built','is built'],a:1},{type:'gap',q:'Third cond: If I ___ (study)',a:'had studied'},{type:'gap',q:'He has lived here ___ 2010',a:'since'}];
+POOL['English_similar'] = [{type:'mcq',q:'Synonym of quick',opts:['slow','fast','ancient'],a:1},{type:'mcq',q:'Synonym of happy',opts:['sad','joyful','angry'],a:1},{type:'mcq',q:'Synonym of tiny',opts:['large','small','huge'],a:1},{type:'mcq',q:'Synonym of begin',opts:['stop','start','begin'],a:1},{type:'mcq',q:'Synonym of angry',opts:['irate','calm','nice'],a:0}];
+POOL['English_vocab'] = [{type:'mcq',q:'Meaning of ubiquitous?',opts:['rare','everywhere','tiny'],a:1},{type:'mcq',q:'Brevity means?',opts:['shortness','length','size'],a:0},{type:'mcq',q:'Elated means?',opts:['sad','very happy','tired'],a:1},{type:'mcq',q:'Candid means?',opts:['honest','shy','loud'],a:0},{type:'mcq',q:'Frugal means?',opts:['thrifty','wasteful','strong'],a:0}];
+POOL['English_collocations'] = [{type:'gap',q:'Make a ___ decision',a:'firm'},{type:'gap',q:'___ homework',a:'do'},{type:'gap',q:'Heavy ___',a:'rain'},{type:'gap',q:'Take a ___',a:'break'},{type:'gap',q:'Pay ___',a:'attention'}];
+
+// state
+let currentSet = 1; let playerTurn = 'X'; let scores = JSON.parse(localStorage.getItem('intuity_scores')||'{}'); if(!scores.X){scores={X:0,O:0}};
+let boardState = Array(9).fill(null); // null or {owner:'X'|'O', perfect:true}
+let winsDrawn = false;
+
+/* ---------- DOM build ---------- */
+const grid = document.getElementById('grid');
+for(let r=0;r<3;r++){
+  for(let c=0;c<3;c++){
+    const idx = r*3+c; const topic = labels[r][c];
+    const cell = document.createElement('div'); cell.className='cell'; cell.dataset.index=idx; cell.dataset.topic=topic; 
+    const lab = document.createElement('div'); lab.className='label'; lab.textContent=topic;
+    const sym = document.createElement('div'); sym.className='symbol'; sym.textContent='+';
+    cell.appendChild(lab); cell.appendChild(sym);
+    grid.appendChild(cell);
+  }
+}
+
+// dots
+const dotsEl = document.getElementById('dots'); for(let s=1;s<=SETS;s++){ const d=document.createElement('button'); d.className='btn ghost'; d.textContent=s; d.dataset.set=s; d.style.marginRight='6px'; d.addEventListener('click',()=>switchSet(+d.dataset.set)); dotsEl.appendChild(d);} updateSetLabel();
+
+function switchSet(s){ currentSet=s; updateSetLabel(); clearForNewSet(); }
+function updateSetLabel(){ document.getElementById('setLabel').textContent=currentSet; }
+
+function clearForNewSet(){ // clear temporary per-set claims but preserve overall scores
+  boardState = Array(9).fill(null); winsDrawn=false; document.querySelector('.svgOverlay').innerHTML=''; renderBoard(); }
+
+/* ---------- Modal behavior ---------- */
+const modal = document.getElementById('modal'); const panelBody = document.getElementById('panelBody'); const modalTopic = document.getElementById('modalTopic'); const timerProgress = document.getElementById('timerProgress');
+let activeIndex = null; let timer = null; const TIMER=20; let timerLeft=TIMER;
+
+function openModal(index){ if(boardState[index] && boardState[index].perfect) return; activeIndex=index; const topic = labels[Math.floor(index/3)][index%3]; modalTopic.textContent = topic; renderQuestions(topic,index); modal.classList.add('show'); document.getElementById('board').classList.add('hidden'); startTimer(); // subtle edge
+  const cell = document.querySelector(`.cell[data-index='${index}']`); cell.classList.add('activeEdge'); }
+function closeModal(){ modal.classList.remove('show'); document.getElementById('board').classList.remove('hidden'); stopTimer(); timerLeft=TIMER; timerProgress.style.strokeDashoffset=113; if(activeIndex!==null){ const cell = document.querySelector(`.cell[data-index='${activeIndex}']`); cell.classList.remove('activeEdge'); } activeIndex=null; }
+
+document.getElementById('closeBtn').addEventListener('click',()=>{ closeModal(); });
+
+function renderQuestions(topic,index){ panelBody.innerHTML=''; const key = topic==='English'? englishVariant(index) : topic; const qset = POOL[key]||[];
+  qset.forEach((q,i)=>{
+    const qdiv=document.createElement('div'); qdiv.className='q'; const h=document.createElement('h4'); h.textContent = `Q${i+1}. ${q.q}`; qdiv.appendChild(h);
+    if(q.type==='mcq'){
+      const ch=document.createElement('div'); ch.className='choices'; q.opts.forEach((opt,oi)=>{ const b=document.createElement('button'); b.className='choice'; b.textContent=opt; b.dataset.sel=oi; b.addEventListener('click',()=>onSelectChoice(b,q,i)); ch.appendChild(b); }); qdiv.appendChild(ch);
+    } else if(q.type==='gap'){
+      const inp=document.createElement('input'); inp.className='choice input'; inp.placeholder='type answer'; inp.addEventListener('input',()=>onTextInput(inp,q)); qdiv.appendChild(inp);
+    } else if(q.type==='match'){
+      // simple matching UI: selectable right-side
+      const left = document.createElement('div'); left.style.marginBottom='6px'; left.style.fontSize='12px'; q.pairs.forEach(p=>{ const l=document.createElement('div'); l.textContent=p[0]; l.style.fontWeight='600'; left.appendChild(l); }); const right=document.createElement('div'); right.className='choices'; q.pairs.slice().sort(()=>0.5-Math.random()).forEach((p,pi)=>{ const b=document.createElement('button'); b.className='choice'; b.textContent=p[1]; b.dataset.sel=pi; b.addEventListener('click',()=>b.classList.toggle('selected')); right.appendChild(b); }); qdiv.appendChild(left); qdiv.appendChild(right);
+    }
+    panelBody.appendChild(qdiv);
+  });
+}
+
+function englishVariant(index){ const engTypes=['English_use','English_similar','English_vocab','English_collocations']; const engPositions=[]; labels.flat().forEach((lab,i)=>{ if(lab==='English') engPositions.push(i); }); const pi = engPositions.indexOf(index); return engTypes[pi % engTypes.length]; }
+
+function onSelectChoice(btn,q,i){ // single select
+  const parent = btn.parentElement; parent.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected','wrong','correct')); btn.classList.add('selected'); // immediate feedback: if matches
+  if(q.type==='mcq'){ if(Number(btn.dataset.sel)===q.a){ btn.classList.add('correct'); setTimeout(()=>btn.classList.remove('correct'),400); } else { btn.classList.add('wrong'); btn.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:260}); setTimeout(()=>btn.classList.remove('wrong'),380); } }
+  // try to store selection to input (hidden)
+  btn.closest('.q').dataset.selected = btn.dataset.sel;
+}
+function onTextInput(inp,q){ // live check
+  const val = inp.value.trim().toLowerCase(); if(val.length>0 && val===String(q.a).toLowerCase()){ inp.classList.add('correct'); setTimeout(()=>inp.classList.remove('correct'),400); } }
+
+/* Timer */
+function startTimer(){ stopTimer(); timerLeft=TIMER; timerProgress.style.strokeDashoffset=113; timer = setInterval(()=>{ timerLeft--; const frac = timerLeft/TIMER; timerProgress.style.strokeDashoffset = 113*(1-frac); if(timerLeft<=0){ clearInterval(timer); submitAnswers(); } if(timerLeft<=5){ // urgent pulse
+    document.getElementById('timerWrap').style.transform='scale(1.05)';
+  } else { document.getElementById('timerWrap').style.transform='scale(1)'; }
+},1000); }
+function stopTimer(){ clearInterval(timer); }
+
+/* Submit logic */
+document.getElementById('submitBtn').addEventListener('click',submitAnswers);
+function submitAnswers(){ if(activeIndex===null) return; const topic = labels[Math.floor(activeIndex/3)][activeIndex%3]; const key = topic==='English'? englishVariant(activeIndex) : topic; const qset = POOL[key] || []; const qDivs = Array.from(panelBody.querySelectorAll('.q'));
+  let correctCount=0; qset.forEach((q,i)=>{
+    const qdiv = qDivs[i]; if(!qdiv) return; if(q.type==='mcq'){ const sel = qdiv.querySelector('.choice.selected'); if(sel && Number(sel.dataset.sel)===q.a){ correctCount++; sel.classList.add('correct'); } else { if(sel) sel.classList.add('wrong'); // show correct
+        const all = qdiv.querySelectorAll('.choice'); all.forEach(ch=>{ if(Number(ch.dataset.sel)===q.a) ch.classList.add('correct'); }); }
+    } else if(q.type==='gap'){ const inp = qdiv.querySelector('input'); const val = inp.value.trim().toLowerCase(); if(val===String(q.a).toLowerCase()){ correctCount++; inp.classList.add('correct'); } else { inp.classList.add('wrong'); inp.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:300}); }
+    } else if(q.type==='match'){ const selected = qdiv.querySelectorAll('.choice.selected'); if(selected.length===q.pairs.length) { correctCount++; selected.forEach(s=>s.classList.add('correct')); } else { selected.forEach(s=>s.classList.add('wrong')); // highlight all correct
+        const all = qdiv.querySelectorAll('.choice'); all.forEach(ch=>{ if(q.pairs.some(p=>p[1]===ch.textContent)) ch.classList.add('correct'); }); }
+    }
+  });
+  const perfect = correctCount===qset.length;
+  if(perfect){ awardTile(activeIndex); }
+  // auto close after short delay and clear selections
+  setTimeout(()=>{ clearPanelVisuals(); closeModal(); if(perfect) flashCellPerfect(activeIndex); activeIndex=null; },800);
+}
+
+function clearPanelVisuals(){ panelBody.querySelectorAll('.q').forEach(q=>{ q.querySelectorAll('.choice').forEach(ch=>{ ch.classList.remove('selected','wrong'); }); const inp = q.querySelector('input'); if(inp) inp.value=''; }); }
+
+function flashCellPerfect(idx){ const cell = document.querySelector(`.cell[data-index='${idx}']`); cell.classList.add('perfect'); setTimeout(()=>cell.classList.remove('perfect'),2200); }
+
+/* Award tile & scoring */
+function awardTile(idx){ boardState[idx]={owner:playerTurn,perfect:true}; renderBoard(); scores[playerTurn] = (scores[playerTurn]||0)+1; document.getElementById(playerTurn==='X'?'scoreX':'scoreO').textContent = scores[playerTurn]; localStorage.setItem('intuity_scores', JSON.stringify(scores)); playCorrect(); checkWin(); // transfer symbol and next turn
+  playerTurn = playerTurn==='X'?'O':'X'; document.getElementById('turnLabel').textContent = playerTurn; }
+
+function renderBoard(){ document.querySelectorAll('.cell').forEach((cell,i)=>{ const s=boardState[i]; const sym=cell.querySelector('.symbol'); cell.classList.remove('claimed-X','claimed-O'); if(s){ cell.classList.add('claimed-'+s.owner); sym.textContent = s.owner==='X'? '❌' : '⭕'; } else { sym.textContent='+'; } }); }
+
+/* Win detection */
+const WINS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function checkWin(){ const owners = boardState.map(v=>v? v.owner : null); for(const line of WINS){ if(line.every(i=>owners[i]===owners[line[0]] && owners[i]!==null)){ drawLine(line); showTrophy(); break; } } }
+
+function drawLine(line){ const svg = document.querySelector('.svgOverlay'); svg.innerHTML=''; const cells = Array.from(document.querySelectorAll('.cell')); const p1 = centerOf(cells[line[0]]); const p3 = centerOf(cells[line[2]]); const gridRect = grid.getBoundingClientRect(); const scaleX = 300 / gridRect.width; const scaleY = 300 / gridRect.height; const x1=(p1.x-gridRect.left)*scaleX; const y1=(p1.y-gridRect.top)*scaleY; const x2=(p3.x-gridRect.left)*scaleX; const y2=(p3.y-gridRect.top)*scaleY; const ln=document.createElementNS('http://www.w3.org/2000/svg','line'); ln.setAttribute('x1',x1); ln.setAttribute('y1',y1); ln.setAttribute('x2',x2); ln.setAttribute('y2',y2); ln.classList.add('line'); svg.appendChild(ln); setTimeout(()=>ln.style.strokeDashoffset='0',60); winsDrawn=true; }
+
+function centerOf(el){ const r=el.getBoundingClientRect(); return {x:(r.left+r.right)/2,y:(r.top+r.bottom)/2}; }
+
+function showTrophy(){ const t=document.getElementById('trophy'); t.classList.add('show'); playWin(); setTimeout(()=>t.classList.remove('show'),3800); }
+
+/* Reset */
+document.getElementById('resetBtn').addEventListener('click',()=>{ boardState=Array(9).fill(null); scores={X:0,O:0}; localStorage.setItem('intuity_scores',JSON.stringify(scores)); document.getElementById('scoreX').textContent='0'; document.getElementById('scoreO').textContent='0'; document.querySelector('.svgOverlay').innerHTML=''; renderBoard(); });
+
+/* small sounds via WebAudio */
+const audioCtx = (window.AudioContext||window.webkitAudioContext)? new (window.AudioContext||window.webkitAudioContext)():null;
+function playTone(freq,dur){ if(!audioCtx) return; const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.type='sine'; o.frequency.value=freq; g.gain.value=0.02; o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+dur); }
+function playCorrect(){ playTone(1100,0.09); }
+function playWin(){ playTone(1200,0.12); setTimeout(()=>playTone(900,0.12),140); }
+
+/* haptic */
+function vibrate(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
+
+// add cell click handling
+document.querySelectorAll('.cell').forEach(c=>c.addEventListener('click',()=>{ const idx = +c.dataset.index; vibrate(10); playTone(800,0.03); openModal(idx); }));
+
+// expose for console
+window.__INTUITY = {boardState, scores, reset:()=>document.getElementById('resetBtn').click()};
+
+// initial render
+renderBoard(); document.getElementById('scoreX').textContent = scores.X; document.getElementById('scoreO').textContent = scores.O;
+</script>
+</body>
+</html>
