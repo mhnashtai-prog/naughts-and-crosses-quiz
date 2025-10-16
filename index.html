@@ -180,6 +180,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#050606 0%, #07
     <div class="panelFooter">
       <div class="small" id="panelInfo">Select answers – 100% awards tile</div>
       <div style="display:flex;gap:8px">
+        <button class="btn ghost" id="showAnswersBtn">Show Answers</button>
         <button class="btn ghost" id="closeBtn">Close</button>
         <button class="btn primary" id="submitBtn">Submit Answers</button>
       </div>
@@ -359,6 +360,56 @@ function closeModal(){
 document.getElementById('closeBtn').addEventListener('click',()=>{
   closeModal();
 });
+
+document.getElementById('showAnswersBtn').addEventListener('click',showAnswers);
+
+function showAnswers(){
+  if(activeIndex===null) return;
+  const topic = labels[Math.floor(activeIndex/3)][activeIndex%3];
+  const key = topic==='English'? englishVariant(activeIndex) : topic;
+  const qset = POOL[key] || [];
+  const qDivs = Array.from(panelBody.querySelectorAll('.q'));
+  
+  qset.forEach((q,i)=>{
+    const qdiv = qDivs[i];
+    if(!qdiv) return;
+    
+    if(q.type==='mcq'){
+      const all = qdiv.querySelectorAll('.choice');
+      all.forEach(ch=>{
+        ch.classList.remove('selected','wrong');
+        if(Number(ch.dataset.sel)===q.a){
+          ch.classList.add('correct');
+        }
+      });
+    } else if(q.type==='gap'){
+      const inp = qdiv.querySelector('input');
+      inp.value = q.a;
+      inp.classList.remove('wrong');
+      inp.classList.add('correct');
+    } else if(q.type==='match'){
+      // Clear all current selections
+      const choices = qdiv.querySelectorAll('.choice');
+      choices.forEach(ch=>{
+        ch.classList.remove('selected','matched','wrong');
+      });
+      
+      // Show correct pairs by highlighting them
+      q.pairs.forEach(pair=>{
+        choices.forEach(ch=>{
+          if(ch.dataset.value === pair[0] || ch.dataset.value === pair[1]){
+            ch.classList.add('correct');
+          }
+        });
+      });
+      
+      // Also store the correct pairs
+      const correctPairs = q.pairs.map(p => [p[0], p[1]]);
+      qdiv.dataset.pairs = JSON.stringify(correctPairs);
+      matchingState.pairs = correctPairs;
+    }
+  });
+}
 
 function renderQuestions(topic,index){
   panelBody.innerHTML='';
