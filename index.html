@@ -447,10 +447,11 @@ function renderQuestions(topic,index){
       
       const left = document.createElement('div');
       left.className='matchLeft';
-      q.pairs.forEach((p,pi)=>{
+      const shuffledLeft = q.pairs.slice().sort(()=>0.5-Math.random());
+      shuffledLeft.forEach((p,pi)=>{
         const item=document.createElement('button');
         item.className='choice';
-        item.textContent=`${pi+1}. ${p[0]}`;
+        item.textContent=p[0];
         item.dataset.value=p[0];
         item.dataset.side='left';
         item.dataset.leftindex=pi;
@@ -460,8 +461,8 @@ function renderQuestions(topic,index){
       
       const right=document.createElement('div');
       right.className='matchRight';
-      const shuffled = q.pairs.slice().sort(()=>0.5-Math.random());
-      shuffled.forEach((p,pi)=>{
+      const shuffledRight = q.pairs.slice().sort(()=>0.5-Math.random());
+      shuffledRight.forEach((p,pi)=>{
         const b=document.createElement('button');
         b.className='choice';
         b.textContent=p[1];
