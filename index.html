@@ -190,76 +190,147 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#050606 0%, #07
 <script>
 const SETS = 3;
 const labels = [
-  ['Music','English','Cities'],
-  ['English','Countries','English'],
-  ['Sport','English','Famous People']
+  ['Music','English','Cities'],      // SET 1
+  ['Science','English','Geography'], // SET 2
+  ['History','English','Literature'] // SET 3
 ];
 
 const POOL = {
-  'Music': [
+  // SET 1 TOPICS
+  'Music_A': [
     {type:'mcq',q:'Which band is from Liverpool?',opts:['Oasis','The Beatles','Coldplay'],a:1},
     {type:'mcq',q:'Who composed "Für Elise"?',opts:['Mozart','Beethoven','Vivaldi'],a:1},
-    {type:'mcq',q:'Tempo in music refers to?',opts:['Speed','Pitch','Volume'],a:0},
+    {type:'gap',q:'A song in a major key typically sounds ___ (happy/sad)',a:'happy'},
     {type:'mcq',q:'Which instrument family does the clarinet belong to?',opts:['Brass','Woodwind','String'],a:1},
-    {type:'match',q:'Match instrument to family',pairs:[['Guitar','Strings'],['Trumpet','Brass'],['Flute','Woodwind']]}
+    {type:'match',q:'Match composer to their famous work',pairs:[['Beethoven','Symphony No. 9'],['Mozart','The Magic Flute'],['Bach','Brandenburg Concertos'],['Chopin','Nocturnes'],['Vivaldi','The Four Seasons']]}
   ],
-  'Cities': [
+  'Music_B': [
+    {type:'mcq',q:'Who is known as the "King of Pop"?',opts:['Elvis Presley','Michael Jackson','Prince'],a:1},
+    {type:'mcq',q:'Which instrument has 88 keys?',opts:['Organ','Piano','Harpsichord'],a:1},
+    {type:'gap',q:'A song in a minor key typically sounds ___ (happy/sad)',a:'sad'},
+    {type:'mcq',q:'How many strings does a standard guitar have?',opts:['4','6','8'],a:1},
+    {type:'match',q:'Match music genre to origin country',pairs:[['Jazz','United States'],['Flamenco','Spain'],['Samba','Brazil'],['Reggae','Jamaica'],['K-pop','South Korea']]}
+  ],
+  'Cities_A': [
     {type:'mcq',q:'What is the capital of France?',opts:['Paris','Rome','Berlin'],a:0},
     {type:'gap',q:'The capital of Portugal is ___',a:'Lisbon'},
     {type:'mcq',q:'"The Big Apple" refers to which city?',opts:['NYC','LA','Chicago'],a:0},
-    {type:'mcq',q:'What is the capital of Japan?',opts:['Seoul','Tokyo','Beijing'],a:1},
-    {type:'match',q:'Match city to country',pairs:[['Lisbon','Portugal'],['Tokyo','Japan'],['Paris','France']]}
+    {type:'gap',q:'The city of ___ is known as the "Eternal City"',a:'Rome'},
+    {type:'match',q:'Match city to its famous landmark',pairs:[['Paris','Eiffel Tower'],['London','Big Ben'],['New York','Statue of Liberty'],['Sydney','Opera House'],['Rome','Colosseum']]}
   ],
-  'Countries': [
-    {type:'mcq',q:'Which is the largest country by area?',opts:['Canada','Russia','USA'],a:1},
-    {type:'gap',q:'Madeira is an autonomous region of ___',a:'Portugal'},
-    {type:'mcq',q:'Which country has the maple leaf on its flag?',opts:['Canada','USA','UK'],a:0},
-    {type:'match',q:'Match country to continent',pairs:[['Brazil','South America'],['Italy','Europe'],['Australia','Oceania']]},
-    {type:'mcq',q:'Canberra is the capital of which country?',opts:['Australia','Austria','Argentina'],a:0}
+  'Cities_B': [
+    {type:'mcq',q:'What is the capital of Spain?',opts:['Barcelona','Madrid','Seville'],a:1},
+    {type:'gap',q:'The capital of Italy is ___',a:'Rome'},
+    {type:'mcq',q:'Which city is known as the "City of Love"?',opts:['Venice','Paris','Rome'],a:1},
+    {type:'gap',q:'___ is the capital of the United Kingdom',a:'London'},
+    {type:'match',q:'Match city to country',pairs:[['Amsterdam','Netherlands'],['Vienna','Austria'],['Dublin','Ireland'],['Prague','Czech Republic'],['Athens','Greece']]}
   ],
-  'Sport': [
-    {type:'mcq',q:'Which sport is played at Wimbledon?',opts:['Football','Tennis','Cricket'],a:1},
-    {type:'gap',q:'In tennis, a score of zero is called ___',a:'Love'},
-    {type:'mcq',q:'How many players are on a football (soccer) team?',opts:['9','10','11'],a:2},
-    {type:'match',q:'Match sport to equipment',pairs:[['Tennis','Racket'],['Cricket','Bat'],['Football','Ball']]},
-    {type:'mcq',q:'A shuttlecock is used in which sport?',opts:['Tennis','Badminton','Squash'],a:1}
+  
+  // SET 2 TOPICS
+  'Science_A': [
+    {type:'mcq',q:'What is the chemical symbol for gold?',opts:['Go','Au','Gd'],a:1},
+    {type:'gap',q:'The process by which plants make food is called ___',a:'photosynthesis'},
+    {type:'mcq',q:'How many bones are in the adult human body?',opts:['186','206','226'],a:1},
+    {type:'gap',q:'The largest planet in our solar system is ___',a:'Jupiter'},
+    {type:'match',q:'Match scientist to their discovery',pairs:[['Isaac Newton','Gravity'],['Marie Curie','Radium'],['Charles Darwin','Evolution'],['Alexander Fleming','Penicillin'],['Nikola Tesla','Alternating Current']]}
   ],
-  'Famous People': [
-    {type:'mcq',q:'Who authored "Hamlet"?',opts:['Shakespeare','Homer','Dante'],a:0},
-    {type:'gap',q:'The scientist famous for the theory of relativity: ___ Einstein',a:'Albert'},
-    {type:'mcq',q:'Who painted the Mona Lisa?',opts:['Da Vinci','Van Gogh','Picasso'],a:0},
-    {type:'match',q:'Match person to field',pairs:[['Churchill','Politics'],['Einstein','Science'],['Monet','Art']]},
-    {type:'mcq',q:'Who was the first woman to fly solo across the Atlantic?',opts:['Amelia Earhart','Marie Curie','Rosa Parks'],a:0}
+  'Science_B': [
+    {type:'mcq',q:'What is the chemical symbol for water?',opts:['H2O','HO2','H2O2'],a:0},
+    {type:'gap',q:'The center of an atom is called the ___',a:'nucleus'},
+    {type:'mcq',q:'At what temperature does water boil (Celsius)?',opts:['90','100','110'],a:1},
+    {type:'gap',q:'The force that pulls objects toward Earth is ___',a:'gravity'},
+    {type:'match',q:'Match organ to body system',pairs:[['Heart','Circulatory'],['Lungs','Respiratory'],['Brain','Nervous'],['Stomach','Digestive'],['Kidneys','Urinary']]}
   ],
-  'English_conditionals': [
+  'Geography_A': [
+    {type:'mcq',q:'Which is the longest river in the world?',opts:['Amazon','Nile','Yangtze'],a:1},
+    {type:'gap',q:'The highest mountain in the world is Mount ___',a:'Everest'},
+    {type:'mcq',q:'How many continents are there?',opts:['5','6','7'],a:2},
+    {type:'gap',q:'The largest desert in the world is the ___',a:'Sahara'},
+    {type:'match',q:'Match country to its capital',pairs:[['Spain','Madrid'],['Turkey','Ankara'],['Brazil','Brasília'],['Canada','Ottawa'],['Egypt','Cairo']]}
+  ],
+  'Geography_B': [
+    {type:'mcq',q:'Which ocean is the largest?',opts:['Atlantic','Pacific','Indian'],a:1},
+    {type:'gap',q:'The longest river in South America is the ___',a:'Amazon'},
+    {type:'mcq',q:'Which continent is the largest by area?',opts:['Africa','Asia','America'],a:1},
+    {type:'gap',q:'The ___ Desert is the driest place on Earth',a:'Atacama'},
+    {type:'match',q:'Match island to ocean',pairs:[['Madagascar','Indian Ocean'],['Iceland','Atlantic Ocean'],['Fiji','Pacific Ocean'],['Sri Lanka','Indian Ocean'],['Cuba','Atlantic Ocean']]}
+  ],
+  
+  // SET 3 TOPICS
+  'History_A': [
+    {type:'mcq',q:'In which year did World War II end?',opts:['1943','1945','1947'],a:1},
+    {type:'gap',q:'The ancient wonder located in Egypt is the ___ of Giza',a:'Pyramids'},
+    {type:'mcq',q:'Who was the first emperor of Rome?',opts:['Julius Caesar','Augustus','Nero'],a:1},
+    {type:'gap',q:'The ___ Revolution began in 1789',a:'French'},
+    {type:'match',q:'Match historical event to year',pairs:[['Moon Landing','1969'],['Fall of Berlin Wall','1989'],['WWI Begins','1914'],['Discovery of America','1492'],['Magna Carta Signed','1215']]}
+  ],
+  'History_B': [
+    {type:'mcq',q:'In which year did World War I begin?',opts:['1912','1914','1916'],a:1},
+    {type:'gap',q:'The ancient civilization that built Machu Picchu was the ___',a:'Inca'},
+    {type:'mcq',q:'Who was the first President of the United States?',opts:['Thomas Jefferson','George Washington','John Adams'],a:1},
+    {type:'gap',q:'The ___ Revolution began in the 18th century in Britain',a:'Industrial'},
+    {type:'match',q:'Match leader to country',pairs:[['Napoleon','France'],['Churchill','Britain'],['Lenin','Russia'],['Gandhi','India'],['Mandela','South Africa']]}
+  ],
+  'Literature_A': [
+    {type:'mcq',q:'Who wrote "1984"?',opts:['George Orwell','Aldous Huxley','Ray Bradbury'],a:0},
+    {type:'gap',q:'The author of "Romeo and Juliet" is William ___',a:'Shakespeare'},
+    {type:'mcq',q:'Which novel features the character Jay Gatsby?',opts:['The Great Gatsby','The Catcher in the Rye','To Kill a Mockingbird'],a:0},
+    {type:'gap',q:'"To be or not to be" is from the play ___',a:'Hamlet'},
+    {type:'match',q:'Match author to their famous book',pairs:[['J.K. Rowling','Harry Potter'],['Tolkien','The Lord of the Rings'],['Jane Austen','Pride and Prejudice'],['Mark Twain','Tom Sawyer'],['Harper Lee','To Kill a Mockingbird']]}
+  ],
+  'Literature_B': [
+    {type:'mcq',q:'Who wrote "Pride and Prejudice"?',opts:['Emily Brontë','Jane Austen','Charlotte Brontë'],a:1},
+    {type:'gap',q:'The author of "The Odyssey" is ___',a:'Homer'},
+    {type:'mcq',q:'Which novel is set in a dystopian future with "Big Brother"?',opts:['1984','Brave New World','Fahrenheit 451'],a:0},
+    {type:'gap',q:'"Nevermore" is the famous word from the poem "The ___"',a:'Raven'},
+    {type:'match',q:'Match book to genre',pairs:[['Dracula','Gothic Horror'],['Sherlock Holmes','Detective'],['The Hobbit','Fantasy'],['War and Peace','Historical'],['1984','Dystopian']]}
+  ],
+
+  // ENGLISH TOPICS (appear in all sets but with different content)
+  'English_set1_grammar_A': [
     {type:'mcq',q:'If I ___ more time, I would have finished the project.',opts:['have had','had had','would have'],a:1},
     {type:'gap',q:'Were he to arrive early, we ___ start immediately. (can)',a:'could'},
     {type:'mcq',q:'She wouldn\'t have succeeded ___ she worked harder.',opts:['if','unless','provided'],a:1},
-    {type:'mcq',q:'___ you pass the exam, you\'ll receive a certificate.',opts:['Should','Would','Could'],a:0},
-    {type:'gap',q:'Had I known about the traffic, I ___ earlier. (leave)',a:'would have left'}
+    {type:'gap',q:'___ I known about the traffic, I would have left earlier.',a:'Had'},
+    {type:'match',q:'Match conditional type to example',pairs:[['Zero conditional','If you heat ice, it melts'],['First conditional','If it rains, we will stay home'],['Second conditional','If I were rich, I would travel'],['Third conditional','If I had known, I would have come'],['Mixed conditional','If I were smarter, I would have passed']]}
   ],
-  'English_collocations': [
-    {type:'gap',q:'Make a ___ decision (strong/definite)',a:'firm'},
-    {type:'gap',q:'___ a conclusion (arrive at)',a:'draw'},
-    {type:'mcq',q:'Which collocation is correct?',opts:['make homework','do homework','take homework'],a:1},
-    {type:'gap',q:'Heavy ___ (not light precipitation)',a:'rain'},
-    {type:'mcq',q:'The correct phrase is ___',opts:['pay attention','give attention','make attention'],a:0}
+  'English_set1_grammar_B': [
+    {type:'mcq',q:'If she ___ harder, she would have passed.',opts:['studied','had studied','would study'],a:1},
+    {type:'gap',q:'Should you need help, I ___ be here. (will)',a:'will'},
+    {type:'mcq',q:'I would go to the party ___ I wasn\'t so tired.',opts:['if','unless','provided'],a:0},
+    {type:'gap',q:'___ they arrived earlier, we could have started on time.',a:'Had'},
+    {type:'match',q:'Match sentence type to function',pairs:[['Passive voice','Action receiver emphasized'],['Active voice','Action doer emphasized'],['Reported speech','Indirect quotation'],['Direct speech','Exact quotation'],['Imperative','Command or request']]}
   ],
-  'English_phrasal': [
-    {type:'mcq',q:'The meeting was ___ until next week.',opts:['put off','put on','put up'],a:0},
-    {type:'gap',q:'She needs to ___ with her studies. (continue diligently)',a:'keep up'},
-    {type:'mcq',q:'I can\'t ___ his rudeness anymore.',opts:['put up with','put down to','put off'],a:0},
-    {type:'gap',q:'The company had to ___ 50 employees. (dismiss)',a:'lay off'},
-    {type:'mcq',q:'They\'re trying to ___ a solution.',opts:['come up with','come down with','come across'],a:0}
-  ],
-  'English_vocabulary': [
+  'English_set2_vocabulary_A': [
     {type:'mcq',q:'What does "ubiquitous" mean?',opts:['rare','present everywhere','ancient'],a:1},
-    {type:'mcq',q:'"Brevity" refers to?',opts:['shortness','length','complexity'],a:0},
+    {type:'gap',q:'"___" means extremely careful and precise',a:'Meticulous'},
     {type:'mcq',q:'If someone is "elated", they are?',opts:['depressed','extremely happy','confused'],a:1},
-    {type:'mcq',q:'"Candid" means?',opts:['honest and direct','shy','diplomatic'],a:0},
-    {type:'mcq',q:'A "frugal" person is?',opts:['economical','wasteful','generous'],a:0}
+    {type:'gap',q:'An "___ " statement can be interpreted in multiple ways',a:'ambiguous'},
+    {type:'match',q:'Match word to its meaning',pairs:[['Eloquent','Fluent and persuasive speaking'],['Resilient','Able to recover quickly'],['Pragmatic','Practical and realistic'],['Candid','Honest and direct'],['Frugal','Economical with money']]}
+  ],
+  'English_set2_vocabulary_B': [
+    {type:'mcq',q:'What does "ephemeral" mean?',opts:['lasting briefly','permanent','ancient'],a:0},
+    {type:'gap',q:'"___" means showing great attention to detail',a:'Fastidious'},
+    {type:'mcq',q:'If someone is "lethargic", they are?',opts:['energetic','lacking energy','angry'],a:1},
+    {type:'gap',q:'A "___" person is excessively talkative',a:'garrulous'},
+    {type:'match',q:'Match word to its meaning',pairs:[['Tenacious','Persistent and determined'],['Verbose','Using too many words'],['Benevolent','Kind and generous'],['Astute','Shrewd and perceptive'],['Indifferent','Lacking interest']]}
+  ],
+  'English_set3_phrasal_A': [
+    {type:'mcq',q:'The meeting was ___ until next week.',opts:['put off','put on','put up'],a:0},
+    {type:'gap',q:'She needs to ___ ___ with her studies. (2 words)',a:'keep up'},
+    {type:'mcq',q:'I can\'t ___ his rudeness anymore.',opts:['put up with','put down to','put off'],a:0},
+    {type:'gap',q:'The company had to ___ ___ 50 employees. (2 words)',a:'lay off'},
+    {type:'match',q:'Match phrasal verb to meaning',pairs:[['give up','quit/stop trying'],['look after','take care of'],['turn down','reject/refuse'],['figure out','understand/solve'],['run into','meet unexpectedly']]}
+  ],
+  'English_set3_phrasal_B': [
+    {type:'mcq',q:'She decided to ___ her old clothes.',opts:['get rid of','get along with','get over'],a:0},
+    {type:'gap',q:'Please ___ ___ the volume. (2 words - increase)',a:'turn up'},
+    {type:'mcq',q:'We need to ___ with the plan.',opts:['go ahead','go away','go back'],a:0},
+    {type:'gap',q:'The children ___ ___ their grandmother. (2 words - resemble)',a:'take after'},
+    {type:'match',q:'Match phrasal verb to meaning',pairs:[['break down','stop functioning'],['carry on','continue'],['bring up','mention/raise children'],['call off','cancel'],['set up','establish/arrange']]}
   ]
 };
+
 
 let currentSet = 1;
 let playerTurn = 'X';
@@ -268,19 +339,19 @@ if(!scores.X){scores={X:0,O:0}}
 let boardState = Array(9).fill(null);
 let winsDrawn = false;
 let matchingState = {firstClick: null, pairs: [], answered: false};
+let cellAttempts = {}; // Track which variant (A or B) was used for each cell
 
 const grid = document.getElementById('grid');
 for(let r=0;r<3;r++){
   for(let c=0;c<3;c++){
     const idx = r*3+c;
-    const topic = labels[r][c];
     const cell = document.createElement('div');
     cell.className='cell';
     cell.dataset.index=idx;
-    cell.dataset.topic=topic;
+    cell.dataset.row=r;
+    cell.dataset.col=c;
     const lab = document.createElement('div');
     lab.className='label';
-    lab.textContent=topic;
     const sym = document.createElement('div');
     sym.className='symbol';
     sym.textContent='+';
@@ -288,6 +359,16 @@ for(let r=0;r<3;r++){
     cell.appendChild(sym);
     grid.appendChild(cell);
   }
+}
+
+function updateCellLabels(){
+  document.querySelectorAll('.cell').forEach((cell,idx)=>{
+    const r = Math.floor(idx/3);
+    const c = idx%3;
+    const topic = labels[currentSet-1][c]; // Each set has 3 topics in a row
+    cell.dataset.topic = topic;
+    cell.querySelector('.label').textContent = topic;
+  });
 }
 
 const dotsEl = document.getElementById('dots');
@@ -324,7 +405,9 @@ function updatePlayerHighlight(){
 function clearForNewSet(){
   boardState = Array(9).fill(null);
   winsDrawn=false;
+  cellAttempts = {}; // Reset attempts for new set
   document.querySelector('.svgOverlay').innerHTML='';
+  updateCellLabels();
   renderBoard();
 }
 
@@ -337,7 +420,8 @@ function openModal(index){
   if(boardState[index] && boardState[index].perfect) return;
   activeIndex=index;
   matchingState = {firstClick: null, pairs: [], answered: false};
-  const topic = labels[Math.floor(index/3)][index%3];
+  const col = index % 3;
+  const topic = labels[currentSet-1][col];
   modalTopic.textContent = topic;
   renderQuestions(topic,index);
   modal.classList.add('show');
@@ -365,8 +449,21 @@ document.getElementById('showAnswersBtn').addEventListener('click',showAnswers);
 
 function showAnswers(){
   if(activeIndex===null) return;
-  const topic = labels[Math.floor(activeIndex/3)][activeIndex%3];
-  const key = topic==='English'? englishVariant(activeIndex) : topic;
+  const col = activeIndex % 3;
+  const topic = labels[currentSet-1][col];
+  
+  // Determine current variant
+  const cellKey = `${currentSet}-${activeIndex}`;
+  let variant = cellAttempts[cellKey] || 'A';
+  
+  // Get the key with variant suffix
+  let key;
+  if(topic==='English'){
+    key = englishVariant(activeIndex) + '_' + variant;
+  } else {
+    key = topic + '_' + variant;
+  }
+  
   const qset = POOL[key] || [];
   const qDivs = Array.from(panelBody.querySelectorAll('.q'));
   
@@ -413,7 +510,19 @@ function showAnswers(){
 
 function renderQuestions(topic,index){
   panelBody.innerHTML='';
-  const key = topic==='English'? englishVariant(index) : topic;
+  
+  // Determine which variant to use
+  const cellKey = `${currentSet}-${index}`;
+  let variant = cellAttempts[cellKey] || 'A';
+  
+  // Get the key with variant suffix
+  let key;
+  if(topic==='English'){
+    key = englishVariant(index) + '_' + variant;
+  } else {
+    key = topic + '_' + variant;
+  }
+  
   const qset = POOL[key]||[];
   qset.forEach((q,i)=>{
     const qdiv=document.createElement('div');
@@ -482,13 +591,13 @@ function renderQuestions(topic,index){
 }
 
 function englishVariant(index){
-  const engTypes=['English_conditionals','English_collocations','English_phrasal','English_vocabulary'];
-  const engPositions=[];
-  labels.flat().forEach((lab,i)=>{
-    if(lab==='English') engPositions.push(i);
-  });
-  const pi = engPositions.indexOf(index);
-  return engTypes[pi % engTypes.length];
+  // Map each set to its English variant
+  const setEnglishMap = {
+    1: 'English_set1_grammar',    // Set 1: Conditionals/Grammar
+    2: 'English_set2_vocabulary', // Set 2: Vocabulary
+    3: 'English_set3_phrasal'     // Set 3: Phrasal Verbs
+  };
+  return setEnglishMap[currentSet];
 }
 
 function onSelectChoice(btn,q,i){
@@ -539,8 +648,21 @@ document.getElementById('submitBtn').addEventListener('click',submitAnswers);
 
 function submitAnswers(){
   if(activeIndex===null) return;
-  const topic = labels[Math.floor(activeIndex/3)][activeIndex%3];
-  const key = topic==='English'? englishVariant(activeIndex) : topic;
+  const col = activeIndex % 3;
+  const topic = labels[currentSet-1][col];
+  
+  // Determine current variant
+  const cellKey = `${currentSet}-${activeIndex}`;
+  let variant = cellAttempts[cellKey] || 'A';
+  
+  // Get the key with variant suffix
+  let key;
+  if(topic==='English'){
+    key = englishVariant(activeIndex) + '_' + variant;
+  } else {
+    key = topic + '_' + variant;
+  }
+  
   const qset = POOL[key] || [];
   const qDivs = Array.from(panelBody.querySelectorAll('.q'));
   let correctCount=0;
@@ -604,6 +726,12 @@ function submitAnswers(){
   const perfect = correctCount===qset.length;
   if(perfect){
     awardTile(activeIndex);
+  } else {
+    // Switch to variant B for next attempt if they failed with variant A
+    if(variant === 'A'){
+      cellAttempts[cellKey] = 'B';
+    }
+    // If they failed with B, keep it at B (they'll see different questions each time due to randomization)
   }
   
   setTimeout(()=>{
@@ -763,6 +891,7 @@ document.querySelectorAll('.cell').forEach(c=>c.addEventListener('click',()=>{
 
 window.__INTUITY = {boardState, scores, reset:()=>document.getElementById('resetBtn').click()};
 
+updateCellLabels();
 renderBoard();
 document.getElementById('scoreX').textContent = scores.X;
 document.getElementById('scoreO').textContent = scores.O;
