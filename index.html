@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>INTUITY – Naughts & Crosses (Enhanced Edition)</title>
+<title>INTUITY – Quiz Battle Arena</title>
 <style>
 :root{
-  --bg:#060606; --muted:#dfeee0; --lime1:#9be56a; --lime2:#5dd26b; --glass:rgba(255,255,255,0.04);
+  --bg:#060606; --muted:#dfeee0; --lime1:#9be56a; --lime2:#5dd26b;
   --blue1:#4a9eff; --blue2:#2563eb;
-  --card-pad:18px; --accent-bezier:cubic-bezier(.4,0,.2,1);
+  --accent-bezier:cubic-bezier(.4,0,.2,1);
   font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
 }
 *{box-sizing:border-box}
@@ -30,7 +30,6 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#050606 0%, #07
 .small{font-size:13px;color:rgba(255,255,255,0.7)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .cell{aspect-ratio:1/1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;cursor:pointer;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(0,0,0,0.3));border:1px solid rgba(255,255,255,0.03);transition:transform .25s var(--accent-bezier),box-shadow .18s;overflow:hidden}
-.cell:before{content:'';position:absolute;inset:0;border-radius:12px;padding:2px;pointer-events:none;background:linear-gradient(90deg,transparent,transparent);}
 .cell:hover:not(.claimed-X):not(.claimed-O){transform:translateY(-8px) rotateX(2deg);box-shadow:0 14px 30px rgba(0,0,0,0.6)}
 .cell .label{position:absolute;top:10px;left:12px;font-size:12px;color:rgba(255,255,255,0.75);font-weight:500}
 .cell .symbol{font-size:36px;transition:transform 0.3s var(--accent-bezier)}
@@ -58,86 +57,32 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#050606 0%, #07
 .q h4{margin:0 0 12px 0;font-size:14px;color:rgba(255,255,255,0.90);font-weight:500;line-height:1.5}
 .choices{display:flex;flex-wrap:wrap;gap:10px}
 .matchContainer{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
-.matchLeft{display:flex;flex-direction:column;gap:8px}
-.matchRight{display:flex;flex-direction:column;gap:8px}
+.matchLeft,.matchRight{display:flex;flex-direction:column;gap:8px}
 .choice{
-  padding:12px 16px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.08);
-  cursor:pointer;
-  background:rgba(255,255,255,0.02);
-  font-size:14px;
-  color:rgba(255,255,255,0.85);
-  transition:all .2s var(--accent-bezier);
-  box-shadow:0 2px 8px rgba(255,140,40,0.08);
-  min-height:44px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  user-select:none;
+  padding:12px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);cursor:pointer;
+  background:rgba(255,255,255,0.02);font-size:14px;color:rgba(255,255,255,0.85);
+  transition:all .2s var(--accent-bezier);box-shadow:0 2px 8px rgba(255,140,40,0.08);
+  min-height:44px;display:flex;align-items:center;justify-content:center;user-select:none;
 }
-.choice:hover{
-  background:rgba(255,255,255,0.04);
-  border-color:rgba(255,255,255,0.12);
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(255,140,40,0.12);
-}
-.choice.selected{
-  background:rgba(59,130,246,0.25);
-  border-color:rgba(59,130,246,0.4);
-  box-shadow:0 4px 16px rgba(59,130,246,0.3);
-  color:rgba(255,255,255,0.95);
-  transform:scale(1.02);
-}
-.choice.matched{
-  background:rgba(155,229,106,0.15);
-  border-color:rgba(155,229,106,0.3);
-  opacity:0.7;
-  pointer-events:none;
-}
-.choice.correct{
-  background:linear-gradient(180deg,var(--lime1),var(--lime2));
-  color:#04270b;
-  border-color:var(--lime2);
-  box-shadow:0 6px 20px rgba(155,229,106,0.35);
-  animation:correctBounce 0.4s ease-out;
-}
-@keyframes correctBounce{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-  100%{transform:scale(1)}
-}
-.choice.wrong{
-  background:rgba(255,80,80,0.15);
-  border-color:rgba(255,80,80,0.25);
-  box-shadow:0 4px 12px rgba(255,80,80,0.2);
-  animation:shake 0.3s ease-out;
-}
-.choice.input{
-  width:100%;
-  padding:14px 16px;
-  color:var(--muted);
-  font-size:15px;
-}
+.choice:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);transform:translateY(-1px)}
+.choice.selected{background:rgba(59,130,246,0.25);border-color:rgba(59,130,246,0.4);box-shadow:0 4px 16px rgba(59,130,246,0.3);transform:scale(1.02)}
+.choice.matched{background:rgba(155,229,106,0.15);border-color:rgba(155,229,106,0.3);opacity:0.7;pointer-events:none}
+.choice.correct{background:linear-gradient(180deg,var(--lime1),var(--lime2));color:#04270b;border-color:var(--lime2);box-shadow:0 6px 20px rgba(155,229,106,0.35);animation:correctBounce 0.4s ease-out}
+@keyframes correctBounce{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.choice.wrong{background:rgba(255,80,80,0.15);border-color:rgba(255,80,80,0.25);box-shadow:0 4px 12px rgba(255,80,80,0.2);animation:shake 0.3s ease-out}
 .panelFooter{display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:10px}
 .btn{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;font-size:14px;font-weight:500;transition:all .2s var(--accent-bezier)}
 .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
 .btn.ghost:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12)}
 .btn.primary{background:linear-gradient(180deg,var(--lime1),var(--lime2));color:#04270b}
 .btn.primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(155,229,106,0.3)}
-.btn.primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 .svgOverlay{position:absolute;inset:0;pointer-events:none}
 .line{stroke:var(--lime2);stroke-width:8;stroke-linecap:round;fill:none;stroke-dasharray:600;stroke-dashoffset:600;transition:stroke-dashoffset .9s var(--accent-bezier)}
 .trophy{position:absolute;left:50%;top:30%;transform:translate(-50%,-50%) scale(0);opacity:0;transition:transform .6s var(--accent-bezier),opacity .4s}
 .trophy.show{transform:translate(-50%,-50%) scale(1);opacity:1}
 .trophy .cup{font-size:56px}
 .board.hidden{opacity:0;pointer-events:none}
-@media(max-width:900px){ 
-  .panel{width:94vw;padding:18px} 
-  .choice{padding:10px 14px;font-size:13px;min-height:42px}
-  .q h4{font-size:13px}
-  .matchContainer{grid-template-columns:1fr;gap:12px}
-}
+@media(max-width:900px){.panel{width:94vw;padding:18px}.choice{padding:10px 14px;font-size:13px;min-height:42px}.q h4{font-size:13px}.matchContainer{grid-template-columns:1fr;gap:12px}}
 </style>
 </head>
 <body>
@@ -145,7 +90,7 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#050606 0%, #07
   <div class="header">
     <div class="brand">
       <h1>INTUITY</h1>
-      <div class="sub">Intuitive & Immersive</div>
+      <div class="sub">Quiz Battle Arena</div>
       <div class="author">Majid Nashtai</div>
     </div>
     <div class="statusBar">
@@ -156,20 +101,19 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#050606 0%, #07
 
   <div class="boardWrap">
     <div class="board" id="board">
-      <div class="boardHeader"><div class="small">Set: <strong id="setLabel">1</strong></div><div class="small">Turn: <strong id="turnLabel">X</strong></div></div>
+      <div class="boardHeader"><div class="small">Challenge Mode</div><div class="small">Turn: <strong id="turnLabel">X</strong></div></div>
       <div class="grid" id="grid"></div>
       <svg class="svgOverlay" viewBox="0 0 300 300" preserveAspectRatio="none"></svg>
       <div class="trophy" id="trophy"><div class="cup">🏆</div></div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
-      <div id="dots"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
       <button class="btn ghost" id="resetBtn">Reset Game</button>
     </div>
   </div>
 </div>
 
 <div class="modal" id="modal">
-  <div class="panel" role="dialog" aria-modal="true">
+  <div class="panel">
     <div class="panelHeader">
       <div>
         <div class="small" id="modalTopic">Topic</div>
@@ -178,723 +122,250 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,#050606 0%, #07
     </div>
     <div class="panelBody" id="panelBody"></div>
     <div class="panelFooter">
-      <div class="small" id="panelInfo">Select answers – 100% awards tile</div>
+      <div class="small">Get all correct to claim tile!</div>
       <div style="display:flex;gap:8px">
         <button class="btn ghost" id="showAnswersBtn">Show Answers</button>
         <button class="btn ghost" id="closeBtn">Close</button>
-        <button class="btn primary" id="submitBtn">Submit Answers</button>
+        <button class="btn primary" id="submitBtn">Submit</button>
       </div>
     </div>
   </div>
 </div>
 <script>
-const SETS = 3;
-const labels = [
-  ['Music','English','Cities'],      // SET 1
-  ['Science','English','Geography'], // SET 2
-  ['History','English','Literature'] // SET 3
-];
+const GRID_TOPICS=['Sport','English','Cities','English','Famous People','English','Countries','English','Music'];
+const POOL={Sport:[[{type:'mcq',q:'Which sport uses a shuttlecock?',opts:['Tennis','Badminton','Squash','Table Tennis'],a:1},{type:'mcq',q:'How many players on a basketball court per team?',opts:['5','6','7','8'],a:0},{type:'match',q:'Match sport to equipment',pairs:[['Football','Goal'],['Cricket','Stumps'],['Tennis','Net'],['Golf','Hole']]},{type:'mcq',q:'In which sport do you slam dunk?',opts:['Volleyball','Basketball','Handball','Netball'],a:1},{type:'mcq',q:'Red card in football means?',opts:['Warning','Ejection','Penalty','Timeout'],a:1}],[{type:'mcq',q:'How many Olympic rings?',opts:['4','5','6','7'],a:1},{type:'match',q:'Match athlete to sport',pairs:[['Usain Bolt','Sprinting'],['Serena Williams','Tennis'],['Michael Phelps','Swimming'],['Messi','Football']]},{type:'mcq',q:'Stumps in cricket per end?',opts:['2','3','4','5'],a:1},{type:'mcq',q:'Sport played at Wimbledon?',opts:['Football','Cricket','Tennis','Rugby'],a:2},{type:'mcq',q:'Rugby try points?',opts:['3','4','5','6'],a:2}],[{type:'mcq',q:'Maximum break in snooker?',opts:['137','147','157','167'],a:1},{type:'mcq',q:'Butterfly stroke in which sport?',opts:['Diving','Gymnastics','Swimming','Surfing'],a:2},{type:'match',q:'Match sport to venue',pairs:[['Cricket','Oval'],['Tennis','Court'],['Swimming','Pool'],['Football','Stadium']]},{type:'mcq',q:'Holes in standard golf?',opts:['9','12','18','24'],a:2},{type:'mcq',q:'Which country invented baseball?',opts:['Canada','USA','Cuba','Japan'],a:1}],[{type:'mcq',q:'KO in boxing means?',opts:['Knockout','Technical knockout','Disqualified','Decision'],a:0},{type:'mcq',q:'Sets to win Wimbledon men?',opts:['2','3','4','5'],a:1},{type:'match',q:'Match term to sport',pairs:[['Ace','Tennis'],['Hat-trick','Football'],['Eagle','Golf'],['Strike','Bowling']]},{type:'mcq',q:'Basketball hoop height (feet)?',opts:['8','9','10','11'],a:2},{type:'mcq',q:'"Love" means zero in?',opts:['Badminton','Squash','Tennis','Table Tennis'],a:2}],[{type:'mcq',q:'Rugby union team players?',opts:['13','15','17','19'],a:1},{type:'mcq',q:'Longest track race?',opts:['5000m','10000m','15000m','Marathon'],a:1},{type:'match',q:'Match sport to surface',pairs:[['Ice Hockey','Ice'],['Volleyball','Court'],['Hockey','Grass'],['Basketball','Wood']]},{type:'mcq',q:'FIFA stands for?',opts:['Football International Federation','Fédération Internationale de Football','Federal Football Academy','Football Institute'],a:1},{type:'mcq',q:'Stanley Cup sport?',opts:['Basketball','Ice Hockey','Baseball','American Football'],a:1}]],Music:[[{type:'mcq',q:'Who sang "Shape of You"?',opts:['Ed Sheeran','Shawn Mendes','Justin Bieber','Harry Styles'],a:0},{type:'mcq',q:'Artist of "Bad Guy"?',opts:['Ariana Grande','Billie Eilish','Dua Lipa','Taylor Swift'],a:1},{type:'match',q:'Match artist to song',pairs:[['Taylor Swift','Anti-Hero'],['The Weeknd','Blinding Lights'],['Dua Lipa','Levitating'],['Harry Styles','As It Was']]},{type:'mcq',q:'Coldplay lead singer?',opts:['Chris Martin','Adam Levine','Bruno Mars','John Legend'],a:0},{type:'mcq',q:'K-pop group "Dynamite"?',opts:['BTS','Blackpink','EXO','Twice'],a:0}],[{type:'mcq',q:'Guitar strings?',opts:['4','5','6','7'],a:2},{type:'mcq',q:'88 keys instrument?',opts:['Keyboard','Organ','Piano','Synth'],a:2},{type:'match',q:'Match instrument family',pairs:[['Trumpet','Brass'],['Flute','Woodwind'],['Violin','String'],['Drums','Percussion']]},{type:'mcq',q:'Orchestra biggest instrument?',opts:['Tuba','Double Bass','Harp','Organ'],a:1},{type:'mcq',q:'Mouth organ is?',opts:['Flute','Harmonica','Piccolo','Recorder'],a:1}],[{type:'mcq',q:'Who sang "Uptown Funk"?',opts:['Bruno Mars','Jason Derulo','Pharrell','Usher'],a:0},{type:'match',q:'Match band to genre',pairs:[['Imagine Dragons','Alt Rock'],['One Direction','Boy Band'],['Twenty One Pilots','Alternative'],['Maroon 5','Pop Rock']]},{type:'mcq',q:'"Midnights" album artist?',opts:['Ariana Grande','Selena Gomez','Taylor Swift','Miley Cyrus'],a:2},{type:'mcq',q:'Queen of Pop?',opts:['Beyoncé','Madonna','Lady Gaga','Rihanna'],a:1},{type:'mcq',q:'Rapper married to Beyoncé?',opts:['Drake','Jay-Z','Kanye West','Travis Scott'],a:1}],[{type:'mcq',q:'"Tempo" means?',opts:['Volume','Speed','Pitch','Rhythm'],a:1},{type:'mcq',q:'Group of singers called?',opts:['Band','Choir','Orchestra','Ensemble'],a:1},{type:'match',q:'Match term to meaning',pairs:[['Solo','One performer'],['Duet','Two performers'],['Trio','Three performers'],['Quartet','Four performers']]},{type:'mcq',q:'Longest note duration?',opts:['Whole','Half','Quarter','Eighth'],a:0},{type:'mcq',q:'Lines music is written on?',opts:['Bar','Staff','Clef','Measure'],a:1}],[{type:'mcq',q:'Who sang "Flowers" 2023?',opts:['Miley Cyrus','Selena Gomez','Dua Lipa','Ariana Grande'],a:0},{type:'match',q:'Match artist nationality',pairs:[['Adele','British'],['Drake','Canadian'],['Bad Bunny','Puerto Rican'],['Post Malone','American']]},{type:'mcq',q:'Most popular music streaming?',opts:['Apple Music','Spotify','YouTube Music','Amazon Music'],a:1},{type:'mcq',q:'Shawn Mendes plays?',opts:['Piano','Drums','Guitar','Keyboard'],a:2},{type:'mcq',q:'Elvis helped popularize?',opts:['Jazz','Rock and Roll','Blues','Country'],a:1}]],Cities:[[{type:'mcq',q:'Capital of Kazakhstan?',opts:['Almaty','Nur-Sultan','Astana','Tashkent'],a:2},{type:'mcq',q:'Capital of Myanmar?',opts:['Yangon','Bangkok','Naypyidaw','Mandalay'],a:2},{type:'match',q:'Match capital to country',pairs:[['Canberra','Australia'],['Pretoria','South Africa'],['Ottawa','Canada'],['Bern','Switzerland']]},{type:'mcq',q:'Capital of Sri Lanka?',opts:['Colombo','Kandy','Sri Jayawardenepura Kotte','Galle'],a:2},{type:'mcq',q:'Capital of Nigeria?',opts:['Lagos','Abuja','Kano','Ibadan'],a:1}],[{type:'mcq',q:'City on two continents?',opts:['Cairo','Istanbul','Athens','Dubai'],a:1},{type:'match',q:'City features',pairs:[['Venice','Canals'],['Dubai','Desert towers'],['Singapore','Island'],['Amsterdam','Below sea']]},{type:'mcq',q:'Highest capital city?',opts:['Quito','Kathmandu','La Paz','Bogotá'],a:2},{type:'mcq',q:'City on 14 islands?',opts:['Venice','Stockholm','Amsterdam','Copenhagen'],a:1},{type:'mcq',q:'Most populous African city?',opts:['Cairo','Lagos','Kinshasa','Johannesburg'],a:1}],[{type:'mcq',q:'"Pearl of Adriatic"?',opts:['Venice','Split','Dubrovnik','Trieste'],a:2},{type:'match',q:'City nicknames',pairs:[['New Orleans','Big Easy'],['Seattle','Emerald City'],['Detroit','Motor City'],['Las Vegas','Sin City']]},{type:'mcq',q:'"City of Hundred Spires"?',opts:['Prague','Budapest','Vienna','Krakow'],a:0},{type:'mcq',q:'"Granite City" UK?',opts:['Edinburgh','Glasgow','Aberdeen','Dundee'],a:2},{type:'mcq',q:'"Lion City" is?',opts:['Bangkok','Singapore','Hong Kong','Kuala Lumpur'],a:1}],[{type:'mcq',q:'Constantinople is now?',opts:['Athens','Istanbul','Damascus','Baghdad'],a:1},{type:'mcq',q:'Inca Empire capital?',opts:['Lima','Cusco','Machu Picchu','Quito'],a:1},{type:'match',q:'Ancient cities',pairs:[['Rome','Romans'],['Athens','Greeks'],['Cairo','Egyptians'],['Beijing','Chinese']]},{type:'mcq',q:'Oldest continuously inhabited?',opts:['Damascus','Jerusalem','Jericho','Athens'],a:0},{type:'mcq',q:'Pompeii destroyed by?',opts:['Earthquake','Vesuvius','Flood','War'],a:1}],[{type:'mcq',q:'Most visited city?',opts:['Paris','London','Bangkok','Dubai'],a:2},{type:'match',q:'City to river',pairs:[['London','Thames'],['Paris','Seine'],['Cairo','Nile'],['New York','Hudson']]},{type:'mcq',q:'Venice built on?',opts:['Mountains','Islands','Desert','Cliffs'],a:1},{type:'mcq',q:'Machu Picchu country?',opts:['Peru','Bolivia','Chile','Ecuador'],a:0},{type:'mcq',q:'Tallest building city?',opts:['Dubai','New York','Shanghai','Kuala Lumpur'],a:0}]],Countries:[[{type:'mcq',q:'Largest country by area?',opts:['Canada','China','Russia','USA'],a:2},{type:'mcq',q:'Most populous country?',opts:['India','China','USA','Indonesia'],a:0},{type:'match',q:'Country to continent',pairs:[['Brazil','S America'],['Egypt','Africa'],['Thailand','Asia'],['Germany','Europe']]},{type:'mcq',q:'Smallest country?',opts:['Monaco','Vatican City','Liechtenstein','San Marino'],a:1},{type:'mcq',q:'Country with most islands?',opts:['Philippines','Indonesia','Sweden','Japan'],a:2}],[{type:'mcq',q:'Which has no capital?',opts:['Vatican','Nauru','Monaco','Liechtenstein'],a:1},{type:'match',q:'Country currencies',pairs:[['Japan','Yen'],['UK','Pound'],['Mexico','Peso'],['India','Rupee']]},{type:'mcq',q:'Landlocked in Asia?',opts:['Mongolia','Myanmar','Vietnam','Pakistan'],a:0},{type:'mcq',q:'Longest coastline?',opts:['Russia','Canada','Indonesia','USA'],a:1},{type:'mcq',q:'African countries count?',opts:['44','54','64','74'],a:1}],[{type:'mcq',q:'Amazon rainforest mainly?',opts:['Colombia','Peru','Brazil','Venezuela'],a:2},{type:'mcq',q:'Mount Everest border?',opts:['India-China','Nepal-China','Pakistan-China','Bhutan-China'],a:1},{type:'match',q:'Landmark to country',pairs:[['Taj Mahal','India'],['Great Wall','China'],['Eiffel Tower','France'],['Statue of Liberty','USA']]},{type:'mcq',q:'Sahara Desert mainly in?',opts:['Egypt','Algeria','Libya','Morocco'],a:1},{type:'mcq',q:'Country in 4 hemispheres?',opts:['Indonesia','Ecuador','Kiribati','Kenya'],a:2}],[{type:'mcq',q:'Language in Brazil?',opts:['Spanish','Portuguese','French','English'],a:1},{type:'match',q:'Country shapes',pairs:[['Italy','Boot'],['Chile','Thin strip'],['Japan','Archipelago'],['Greece','Peninsula']]},{type:'mcq',q:'Home of kangaroos?',opts:['New Zealand','Australia','Papua New Guinea','Indonesia'],a:1},{type:'mcq',q:'Pyramids of Giza in?',opts:['Egypt','Sudan','Mexico','Guatemala'],a:0},{type:'mcq',q:'Largest island country?',opts:['Indonesia','Madagascar','Philippines','Japan'],a:0}],[{type:'mcq',q:'Neutral in both World Wars?',opts:['Sweden','Switzerland','Spain','Portugal'],a:1},{type:'mcq',q:'Youngest country (2011)?',opts:['Kosovo','South Sudan','East Timor','Montenegro'],a:1},{type:'match',q:'Country to flag colors',pairs:[['France','Blue-White-Red'],['Italy','Green-White-Red'],['Germany','Black-Red-Yellow'],['Spain','Red-Yellow-Red']]},{type:'mcq',q:'Land of rising sun?',opts:['China','Japan','South Korea','Thailand'],a:1},{type:'mcq',q:'Down Under refers to?',opts:['Australia','New Zealand','South Africa','Argentina'],a:0}]],'Famous People':[[{type:'mcq',q:'First man on moon?',opts:['Buzz Aldrin','Neil Armstrong','Yuri Gagarin','John Glenn'],a:1},{type:'mcq',q:'Painted Mona Lisa?',opts:['Michelangelo','Leonardo da Vinci','Raphael','Donatello'],a:1},{type:'match',q:'Person to achievement',pairs:[['Einstein','Relativity'],['Newton','Gravity'],['Darwin','Evolution'],['Galileo','Telescope']]},{type:'mcq',q:'Invented telephone?',opts:['Edison','Bell','Tesla','Marconi'],a:1},{type:'mcq',q:'Wrote Romeo & Juliet?',opts:['Dickens','Shakespeare','Austen','Twain'],a:1}],[{type:'mcq',q:'Youngest Nobel Peace Prize?',opts:['Malala','Obama','Mother Teresa','MLK'],a:0},{type:'match',q:'Leader to country',pairs:[['Churchill','UK'],['Gandhi','India'],['Mandela','S Africa'],['Lincoln','USA']]},{type:'mcq',q:'I have a dream speech?',opts:['Malcolm X','MLK','JFK','Obama'],a:1},{type:'mcq',q:'First female PM UK?',opts:['May','Thatcher','Truss','Merkel'],a:1},{type:'mcq',q:'Apple founder?',opts:['Gates','Jobs','Zuckerberg','Bezos'],a:1}],[{type:'mcq',q:'Harry Potter author?',opts:['Rowling','Tolkien','Lewis','Dahl'],a:0},{type:'mcq',q:'Facebook founder?',opts:['Musk','Zuckerberg','Dorsey','Bezos'],a:1},{type:'match',q:'Inventor to invention',pairs:[['Wright Bros','Airplane'],['Edison','Light bulb'],['Ford','Assembly line'],['Bell','Telephone']]},{type:'mcq',q:'Theory of evolution?',opts:['Darwin','Mendel','Lamarck','Wallace'],a:0},{type:'mcq',q:'Discovered penicillin?',opts:['Pasteur','Fleming','Curie','Jenner'],a:1}],[{type:'mcq',q:'Basketball icon 23?',opts:['LeBron','Kobe','Jordan','Magic'],a:2},{type:'match',q:'Artist to masterpiece',pairs:[['Van Gogh','Starry Night'],['Picasso','Guernica'],['Monet','Water Lilies'],['Da Vinci','Mona Lisa']]},{type:'mcq',q:'First woman in space?',opts:['Sally Ride','Valentina Tereshkova','Svetlana Savitskaya','Mae Jemison'],a:1},{type:'mcq',q:'Microsoft founder?',opts:['Jobs','Gates','Zuckerberg','Musk'],a:1},{type:'mcq',q:'Youngest self-made billionaire?',opts:['Zuckerberg','Kylie Jenner','Bezos','Musk'],a:1}],[{type:'mcq',q:'First Black US President?',opts:['Obama','Biden','Clinton','Bush'],a:0},{type:'mcq',q:'Titanic director?',opts:['Spielberg','Cameron','Nolan','Tarantino'],a:1},{type:'match',q:'Scientist to field',pairs:[['Hawking','Physics'],['Curie','Chemistry'],['Freud','Psychology'],['Turing','Computing']]},{type:'mcq',q:'Wrote 1984?',opts:['Huxley','Orwell','Bradbury','Atwood'],a:1},{type:'mcq',q:'Most Olympic golds?',opts:['Bolt','Phelps','Biles','Ohno'],a:1}]],English:[[{type:'mcq',q:'Past tense of "go"?',opts:['goed','went','gone','going'],a:1},{type:'mcq',q:'"Their" vs "There" - ownership?',opts:['Their','There','They\'re','Thier'],a:0},{type:'match',q:'Match word to synonym',pairs:[['Happy','Joyful'],['Sad','Unhappy'],['Big','Large'],['Small','Tiny']]},{type:'mcq',q:'Plural of "child"?',opts:['childs','childes','children','childrens'],a:2},{type:'mcq',q:'Which is correct?',opts:['I seen it','I saw it','I have saw it','I did saw it'],a:1}],[{type:'mcq',q:'"Give up" means?',opts:['Donate','Quit','Surrender','All above'],a:3},{type:'match',q:'Phrasal verb meanings',pairs:[['Look after','Care for'],['Put off','Postpone'],['Turn down','Reject'],['Run into','Meet']]},{type:'mcq',q:'"Break down" means?',opts:['Destroy','Stop working','Analyze','All above'],a:3},{type:'mcq',q:'Complete: "Can you ___ the TV?"',opts:['turn up','turn off','turn down','All correct'],a:3},{type:'mcq',q:'"Figure out" means?',opts:['Calculate','Understand','Solve','All above'],a:3}],[{type:'mcq',q:'Simile uses?',opts:['like/as','is/are','very/much','than/then'],a:0},{type:'mcq',q:'Metaphor example?',opts:['Fast as wind','Time is money','She runs quickly','Very tired'],a:1},{type:'match',q:'Literary devices',pairs:[['Simile','Like/as comparison'],['Metaphor','Direct comparison'],['Hyperbole','Exaggeration'],['Personification','Human traits']]},{type:'mcq',q:'Alliteration is?',opts:['Rhyming','Repetition of sounds','Exaggeration','Comparison'],a:1},{type:'mcq',q:'"The sun smiled" is?',opts:['Simile','Metaphor','Personification','Hyperbole'],a:2}],[{type:'mcq',q:'Antonym of "difficult"?',opts:['Hard','Easy','Complex','Tough'],a:1},{type:'match',q:'Antonyms',pairs:[['Hot','Cold'],['Fast','Slow'],['Strong','Weak'],['Light','Dark']]},{type:'mcq',q:'Synonym of "beautiful"?',opts:['Ugly','Pretty','Plain','Simple'],a:1},{type:'mcq',q:'"Huge" means?',opts:['Tiny','Very big','Medium','Small'],a:1},{type:'mcq',q:'Opposite of "empty"?',opts:['Full','Vacant','Bare','Hollow'],a:0}],[{type:'mcq',q:'"Its" vs "It\'s" - contraction?',opts:['Its','It\'s','Itz','Its\''],a:1},{type:'mcq',q:'Which is wrong?',opts:['You\'re nice','Your nice','They\'re here','We\'re ready'],a:1},{type:'match',q:'Correct usage',pairs:[['Their','Belonging to them'],['There','Location'],['They\'re','They are'],['Your','Belonging to you']]},{type:'mcq',q:'"Should of" is wrong. Correct is?',opts:['Should off','Should have','Should\'ve only','B and C'],a:3},{type:'mcq',q:'Correct: "Between you and ___"',opts:['I','me','myself','meself'],a:1}],[{type:'mcq',q:'Noun is?',opts:['Action','Person/place/thing','Describing word','Connecting'],a:1},{type:'match',q:'Parts of speech',pairs:[['Verb','Action'],['Adjective','Describes noun'],['Adverb','Describes verb'],['Noun','Person/thing']]},{type:'mcq',q:'Adjective example?',opts:['Run','Quickly','Beautiful','Happiness'],a:2},{type:'mcq',q:'"Quickly" is a/an?',opts:['Noun','Verb','Adjective','Adverb'],a:3},{type:'mcq',q:'Verb in "She runs fast"?',opts:['She','runs','fast','She runs'],a:1}],[{type:'mcq',q:'If I ___ rich, I\'d travel.',opts:['am','was','were','be'],a:2},{type:'mcq',q:'She ___ to school yesterday.',opts:['go','goes','went','going'],a:2},{type:'match',q:'Tense to example',pairs:[['Present','I walk'],['Past','I walked'],['Future','I will walk'],['Present continuous','I am walking']]},{type:'mcq',q:'By tomorrow, I ___ finished.',opts:['will have','will','would','had'],a:0},{type:'mcq',q:'He ___ here for 5 years.',opts:['is','was','has been','will be'],a:2}]]};
+let playerTurn='X',scores=JSON.parse(localStorage.getItem('intuity_scores')||'{}');if(!scores.X)scores={X:0,O:0};
+let boardState=Array(9).fill(null),winsDrawn=false,matchingState={firstClick:null,pairs:[],answered:false};
+let cellAttempts={},currentLoadedSetId=null,activeIndex=null;
+const grid=document.getElementById('grid'),modal=document.getElementById('modal'),panelBody=document.getElementById('panelBody');
+const modalTopic=document.getElementById('modalTopic'),modalSub=document.getElementById('modalSub');
 
-const POOL = {
-  // SET 1 TOPICS
-  'Music_A': [
-    {type:'mcq',q:'Which band is from Liverpool?',opts:['Oasis','The Beatles','Coldplay'],a:1},
-    {type:'mcq',q:'Who composed "Für Elise"?',opts:['Mozart','Beethoven','Vivaldi'],a:1},
-    {type:'gap',q:'A song in a major key typically sounds ___ (happy/sad)',a:'happy'},
-    {type:'mcq',q:'Which instrument family does the clarinet belong to?',opts:['Brass','Woodwind','String'],a:1},
-    {type:'match',q:'Match composer to their famous work',pairs:[['Beethoven','Symphony No. 9'],['Mozart','The Magic Flute'],['Bach','Brandenburg Concertos'],['Chopin','Nocturnes'],['Vivaldi','The Four Seasons']]}
-  ],
-  'Music_B': [
-    {type:'mcq',q:'Who is known as the "King of Pop"?',opts:['Elvis Presley','Michael Jackson','Prince'],a:1},
-    {type:'mcq',q:'Which instrument has 88 keys?',opts:['Organ','Piano','Harpsichord'],a:1},
-    {type:'gap',q:'A song in a minor key typically sounds ___ (happy/sad)',a:'sad'},
-    {type:'mcq',q:'How many strings does a standard guitar have?',opts:['4','6','8'],a:1},
-    {type:'match',q:'Match music genre to origin country',pairs:[['Jazz','United States'],['Flamenco','Spain'],['Samba','Brazil'],['Reggae','Jamaica'],['K-pop','South Korea']]}
-  ],
-  'Cities_A': [
-    {type:'mcq',q:'What is the capital of France?',opts:['Paris','Rome','Berlin'],a:0},
-    {type:'gap',q:'The capital of Portugal is ___',a:'Lisbon'},
-    {type:'mcq',q:'"The Big Apple" refers to which city?',opts:['NYC','LA','Chicago'],a:0},
-    {type:'gap',q:'The city of ___ is known as the "Eternal City"',a:'Rome'},
-    {type:'match',q:'Match city to its famous landmark',pairs:[['Paris','Eiffel Tower'],['London','Big Ben'],['New York','Statue of Liberty'],['Sydney','Opera House'],['Rome','Colosseum']]}
-  ],
-  'Cities_B': [
-    {type:'mcq',q:'What is the capital of Spain?',opts:['Barcelona','Madrid','Seville'],a:1},
-    {type:'gap',q:'The capital of Italy is ___',a:'Rome'},
-    {type:'mcq',q:'Which city is known as the "City of Love"?',opts:['Venice','Paris','Rome'],a:1},
-    {type:'gap',q:'___ is the capital of the United Kingdom',a:'London'},
-    {type:'match',q:'Match city to country',pairs:[['Amsterdam','Netherlands'],['Vienna','Austria'],['Dublin','Ireland'],['Prague','Czech Republic'],['Athens','Greece']]}
-  ],
-  
-  // SET 2 TOPICS
-  'Science_A': [
-    {type:'mcq',q:'What is the chemical symbol for gold?',opts:['Go','Au','Gd'],a:1},
-    {type:'gap',q:'The process by which plants make food is called ___',a:'photosynthesis'},
-    {type:'mcq',q:'How many bones are in the adult human body?',opts:['186','206','226'],a:1},
-    {type:'gap',q:'The largest planet in our solar system is ___',a:'Jupiter'},
-    {type:'match',q:'Match scientist to their discovery',pairs:[['Isaac Newton','Gravity'],['Marie Curie','Radium'],['Charles Darwin','Evolution'],['Alexander Fleming','Penicillin'],['Nikola Tesla','Alternating Current']]}
-  ],
-  'Science_B': [
-    {type:'mcq',q:'What is the chemical symbol for water?',opts:['H2O','HO2','H2O2'],a:0},
-    {type:'gap',q:'The center of an atom is called the ___',a:'nucleus'},
-    {type:'mcq',q:'At what temperature does water boil (Celsius)?',opts:['90','100','110'],a:1},
-    {type:'gap',q:'The force that pulls objects toward Earth is ___',a:'gravity'},
-    {type:'match',q:'Match organ to body system',pairs:[['Heart','Circulatory'],['Lungs','Respiratory'],['Brain','Nervous'],['Stomach','Digestive'],['Kidneys','Urinary']]}
-  ],
-  'Geography_A': [
-    {type:'mcq',q:'Which is the longest river in the world?',opts:['Amazon','Nile','Yangtze'],a:1},
-    {type:'gap',q:'The highest mountain in the world is Mount ___',a:'Everest'},
-    {type:'mcq',q:'How many continents are there?',opts:['5','6','7'],a:2},
-    {type:'gap',q:'The largest desert in the world is the ___',a:'Sahara'},
-    {type:'match',q:'Match country to its capital',pairs:[['Spain','Madrid'],['Turkey','Ankara'],['Brazil','Brasília'],['Canada','Ottawa'],['Egypt','Cairo']]}
-  ],
-  'Geography_B': [
-    {type:'mcq',q:'Which ocean is the largest?',opts:['Atlantic','Pacific','Indian'],a:1},
-    {type:'gap',q:'The longest river in South America is the ___',a:'Amazon'},
-    {type:'mcq',q:'Which continent is the largest by area?',opts:['Africa','Asia','America'],a:1},
-    {type:'gap',q:'The ___ Desert is the driest place on Earth',a:'Atacama'},
-    {type:'match',q:'Match island to ocean',pairs:[['Madagascar','Indian Ocean'],['Iceland','Atlantic Ocean'],['Fiji','Pacific Ocean'],['Sri Lanka','Indian Ocean'],['Cuba','Atlantic Ocean']]}
-  ],
-  
-  // SET 3 TOPICS
-  'History_A': [
-    {type:'mcq',q:'In which year did World War II end?',opts:['1943','1945','1947'],a:1},
-    {type:'gap',q:'The ancient wonder located in Egypt is the ___ of Giza',a:'Pyramids'},
-    {type:'mcq',q:'Who was the first emperor of Rome?',opts:['Julius Caesar','Augustus','Nero'],a:1},
-    {type:'gap',q:'The ___ Revolution began in 1789',a:'French'},
-    {type:'match',q:'Match historical event to year',pairs:[['Moon Landing','1969'],['Fall of Berlin Wall','1989'],['WWI Begins','1914'],['Discovery of America','1492'],['Magna Carta Signed','1215']]}
-  ],
-  'History_B': [
-    {type:'mcq',q:'In which year did World War I begin?',opts:['1912','1914','1916'],a:1},
-    {type:'gap',q:'The ancient civilization that built Machu Picchu was the ___',a:'Inca'},
-    {type:'mcq',q:'Who was the first President of the United States?',opts:['Thomas Jefferson','George Washington','John Adams'],a:1},
-    {type:'gap',q:'The ___ Revolution began in the 18th century in Britain',a:'Industrial'},
-    {type:'match',q:'Match leader to country',pairs:[['Napoleon','France'],['Churchill','Britain'],['Lenin','Russia'],['Gandhi','India'],['Mandela','South Africa']]}
-  ],
-  'Literature_A': [
-    {type:'mcq',q:'Who wrote "1984"?',opts:['George Orwell','Aldous Huxley','Ray Bradbury'],a:0},
-    {type:'gap',q:'The author of "Romeo and Juliet" is William ___',a:'Shakespeare'},
-    {type:'mcq',q:'Which novel features the character Jay Gatsby?',opts:['The Great Gatsby','The Catcher in the Rye','To Kill a Mockingbird'],a:0},
-    {type:'gap',q:'"To be or not to be" is from the play ___',a:'Hamlet'},
-    {type:'match',q:'Match author to their famous book',pairs:[['J.K. Rowling','Harry Potter'],['Tolkien','The Lord of the Rings'],['Jane Austen','Pride and Prejudice'],['Mark Twain','Tom Sawyer'],['Harper Lee','To Kill a Mockingbird']]}
-  ],
-  'Literature_B': [
-    {type:'mcq',q:'Who wrote "Pride and Prejudice"?',opts:['Emily Brontë','Jane Austen','Charlotte Brontë'],a:1},
-    {type:'gap',q:'The author of "The Odyssey" is ___',a:'Homer'},
-    {type:'mcq',q:'Which novel is set in a dystopian future with "Big Brother"?',opts:['1984','Brave New World','Fahrenheit 451'],a:0},
-    {type:'gap',q:'"Nevermore" is the famous word from the poem "The ___"',a:'Raven'},
-    {type:'match',q:'Match book to genre',pairs:[['Dracula','Gothic Horror'],['Sherlock Holmes','Detective'],['The Hobbit','Fantasy'],['War and Peace','Historical'],['1984','Dystopian']]}
-  ],
-
-  // ENGLISH TOPICS (appear in all sets but with different content)
-  'English_set1_grammar_A': [
-    {type:'mcq',q:'If I ___ more time, I would have finished the project.',opts:['have had','had had','would have'],a:1},
-    {type:'gap',q:'Were he to arrive early, we ___ start immediately. (can)',a:'could'},
-    {type:'mcq',q:'She wouldn\'t have succeeded ___ she worked harder.',opts:['if','unless','provided'],a:1},
-    {type:'gap',q:'___ I known about the traffic, I would have left earlier.',a:'Had'},
-    {type:'match',q:'Match conditional type to example',pairs:[['Zero conditional','If you heat ice, it melts'],['First conditional','If it rains, we will stay home'],['Second conditional','If I were rich, I would travel'],['Third conditional','If I had known, I would have come'],['Mixed conditional','If I were smarter, I would have passed']]}
-  ],
-  'English_set1_grammar_B': [
-    {type:'mcq',q:'If she ___ harder, she would have passed.',opts:['studied','had studied','would study'],a:1},
-    {type:'gap',q:'Should you need help, I ___ be here. (will)',a:'will'},
-    {type:'mcq',q:'I would go to the party ___ I wasn\'t so tired.',opts:['if','unless','provided'],a:0},
-    {type:'gap',q:'___ they arrived earlier, we could have started on time.',a:'Had'},
-    {type:'match',q:'Match sentence type to function',pairs:[['Passive voice','Action receiver emphasized'],['Active voice','Action doer emphasized'],['Reported speech','Indirect quotation'],['Direct speech','Exact quotation'],['Imperative','Command or request']]}
-  ],
-  'English_set2_vocabulary_A': [
-    {type:'mcq',q:'What does "ubiquitous" mean?',opts:['rare','present everywhere','ancient'],a:1},
-    {type:'gap',q:'"___" means extremely careful and precise',a:'Meticulous'},
-    {type:'mcq',q:'If someone is "elated", they are?',opts:['depressed','extremely happy','confused'],a:1},
-    {type:'gap',q:'An "___ " statement can be interpreted in multiple ways',a:'ambiguous'},
-    {type:'match',q:'Match word to its meaning',pairs:[['Eloquent','Fluent and persuasive speaking'],['Resilient','Able to recover quickly'],['Pragmatic','Practical and realistic'],['Candid','Honest and direct'],['Frugal','Economical with money']]}
-  ],
-  'English_set2_vocabulary_B': [
-    {type:'mcq',q:'What does "ephemeral" mean?',opts:['lasting briefly','permanent','ancient'],a:0},
-    {type:'gap',q:'"___" means showing great attention to detail',a:'Fastidious'},
-    {type:'mcq',q:'If someone is "lethargic", they are?',opts:['energetic','lacking energy','angry'],a:1},
-    {type:'gap',q:'A "___" person is excessively talkative',a:'garrulous'},
-    {type:'match',q:'Match word to its meaning',pairs:[['Tenacious','Persistent and determined'],['Verbose','Using too many words'],['Benevolent','Kind and generous'],['Astute','Shrewd and perceptive'],['Indifferent','Lacking interest']]}
-  ],
-  'English_set3_phrasal_A': [
-    {type:'mcq',q:'The meeting was ___ until next week.',opts:['put off','put on','put up'],a:0},
-    {type:'gap',q:'She needs to ___ ___ with her studies. (2 words)',a:'keep up'},
-    {type:'mcq',q:'I can\'t ___ his rudeness anymore.',opts:['put up with','put down to','put off'],a:0},
-    {type:'gap',q:'The company had to ___ ___ 50 employees. (2 words)',a:'lay off'},
-    {type:'match',q:'Match phrasal verb to meaning',pairs:[['give up','quit/stop trying'],['look after','take care of'],['turn down','reject/refuse'],['figure out','understand/solve'],['run into','meet unexpectedly']]}
-  ],
-  'English_set3_phrasal_B': [
-    {type:'mcq',q:'She decided to ___ her old clothes.',opts:['get rid of','get along with','get over'],a:0},
-    {type:'gap',q:'Please ___ ___ the volume. (2 words - increase)',a:'turn up'},
-    {type:'mcq',q:'We need to ___ with the plan.',opts:['go ahead','go away','go back'],a:0},
-    {type:'gap',q:'The children ___ ___ their grandmother. (2 words - resemble)',a:'take after'},
-    {type:'match',q:'Match phrasal verb to meaning',pairs:[['break down','stop functioning'],['carry on','continue'],['bring up','mention/raise children'],['call off','cancel'],['set up','establish/arrange']]}
-  ]
-};
-
-
-let currentSet = 1;
-let playerTurn = 'X';
-let scores = JSON.parse(localStorage.getItem('intuity_scores')||'{}');
-if(!scores.X){scores={X:0,O:0}}
-let boardState = Array(9).fill(null);
-let winsDrawn = false;
-let matchingState = {firstClick: null, pairs: [], answered: false};
-let cellAttempts = {}; // Track which variant (A or B) was used for each cell
-
-const grid = document.getElementById('grid');
-for(let r=0;r<3;r++){
-  for(let c=0;c<3;c++){
-    const idx = r*3+c;
-    const cell = document.createElement('div');
-    cell.className='cell';
-    cell.dataset.index=idx;
-    cell.dataset.row=r;
-    cell.dataset.col=c;
-    const lab = document.createElement('div');
-    lab.className='label';
-    const sym = document.createElement('div');
-    sym.className='symbol';
-    sym.textContent='+';
-    cell.appendChild(lab);
-    cell.appendChild(sym);
-    grid.appendChild(cell);
-  }
-}
-
-function updateCellLabels(){
-  document.querySelectorAll('.cell').forEach((cell,idx)=>{
-    const r = Math.floor(idx/3);
-    const c = idx%3;
-    const topic = labels[currentSet-1][c]; // Each set has 3 topics in a row
-    cell.dataset.topic = topic;
-    cell.querySelector('.label').textContent = topic;
-  });
-}
-
-const dotsEl = document.getElementById('dots');
-for(let s=1;s<=SETS;s++){
-  const d=document.createElement('button');
-  d.className='btn ghost';
-  d.textContent=`Set ${s}`;
-  d.dataset.set=s;
-  d.style.marginRight='6px';
-  d.addEventListener('click',()=>switchSet(+d.dataset.set));
-  dotsEl.appendChild(d);
-}
-updateSetLabel();
-updatePlayerHighlight();
-
-function switchSet(s){
-  currentSet=s;
-  updateSetLabel();
-  clearForNewSet();
-}
-
-function updateSetLabel(){
-  document.getElementById('setLabel').textContent=currentSet;
-  dotsEl.querySelectorAll('.btn').forEach(b=>{
-    b.style.borderColor = +b.dataset.set===currentSet ? 'rgba(155,229,106,0.4)' : 'rgba(255,255,255,0.08)';
-  });
+for(let i=0;i<9;i++){
+  const cell=document.createElement('div');
+  cell.className='cell';cell.dataset.index=i;cell.dataset.topic=GRID_TOPICS[i];
+  const lab=document.createElement('div');lab.className='label';lab.textContent=GRID_TOPICS[i];
+  const sym=document.createElement('div');sym.className='symbol';sym.textContent='+';
+  cell.append(lab,sym);grid.appendChild(cell);
 }
 
 function updatePlayerHighlight(){
-  document.getElementById('playerX').classList.toggle('active', playerTurn==='X');
-  document.getElementById('playerO').classList.toggle('active', playerTurn==='O');
+  document.getElementById('playerX').classList.toggle('active',playerTurn==='X');
+  document.getElementById('playerO').classList.toggle('active',playerTurn==='O');
 }
 
-function clearForNewSet(){
-  boardState = Array(9).fill(null);
-  winsDrawn=false;
-  cellAttempts = {}; // Reset attempts for new set
-  document.querySelector('.svgOverlay').innerHTML='';
-  updateCellLabels();
-  renderBoard();
+function getRandomQuestionSet(cellIndex){
+  const topic=GRID_TOPICS[cellIndex],questionSets=POOL[topic]||[];
+  if(questionSets.length===0)return null;
+  if(!cellAttempts[cellIndex])cellAttempts[cellIndex]=[];
+  const usedIds=cellAttempts[cellIndex],availableIds=[];
+  for(let i=0;i<questionSets.length;i++)if(!usedIds.includes(i))availableIds.push(i);
+  if(availableIds.length===0){cellAttempts[cellIndex]=[];for(let i=0;i<questionSets.length;i++)availableIds.push(i);}
+  const randomId=availableIds[Math.floor(Math.random()*availableIds.length)];
+  cellAttempts[cellIndex].push(randomId);
+  return{id:randomId,questions:questionSets[randomId]};
 }
-
-const modal = document.getElementById('modal');
-const panelBody = document.getElementById('panelBody');
-const modalTopic = document.getElementById('modalTopic');
-let activeIndex = null;
 
 function openModal(index){
-  if(boardState[index] && boardState[index].perfect) return;
-  activeIndex=index;
-  matchingState = {firstClick: null, pairs: [], answered: false};
-  const col = index % 3;
-  const topic = labels[currentSet-1][col];
-  modalTopic.textContent = topic;
-  renderQuestions(topic,index);
-  modal.classList.add('show');
+  if(boardState[index]&&boardState[index].perfect)return;
+  activeIndex=index;matchingState={firstClick:null,pairs:[],answered:false};
+  const topic=GRID_TOPICS[index];modalTopic.textContent=topic;
+  const questionSet=getRandomQuestionSet(index);
+  if(!questionSet){alert('No questions available!');return;}
+  currentLoadedSetId=questionSet.id;modalSub.textContent=`${questionSet.questions.length} questions`;
+  renderQuestions(questionSet.questions);modal.classList.add('show');
   document.getElementById('board').classList.add('hidden');
-  const cell = document.querySelector(`.cell[data-index='${index}']`);
-  cell.classList.add('activeEdge');
+  document.querySelector(`.cell[data-index='${index}']`).classList.add('activeEdge');
 }
 
 function closeModal(){
-  modal.classList.remove('show');
-  document.getElementById('board').classList.remove('hidden');
-  if(activeIndex!==null){
-    const cell = document.querySelector(`.cell[data-index='${activeIndex}']`);
-    cell.classList.remove('activeEdge');
-  }
-  activeIndex=null;
-  matchingState = {firstClick: null, pairs: [], answered: false};
+  modal.classList.remove('show');document.getElementById('board').classList.remove('hidden');
+  if(activeIndex!==null)document.querySelector(`.cell[data-index='${activeIndex}']`).classList.remove('activeEdge');
+  activeIndex=null;currentLoadedSetId=null;matchingState={firstClick:null,pairs:[],answered:false};
 }
 
-document.getElementById('closeBtn').addEventListener('click',()=>{
-  closeModal();
-});
-
-document.getElementById('showAnswersBtn').addEventListener('click',showAnswers);
-
 function showAnswers(){
-  if(activeIndex===null) return;
-  const col = activeIndex % 3;
-  const topic = labels[currentSet-1][col];
-  
-  // Determine current variant
-  const cellKey = `${currentSet}-${activeIndex}`;
-  let variant = cellAttempts[cellKey] || 'A';
-  
-  // Get the key with variant suffix
-  let key;
-  if(topic==='English'){
-    key = englishVariant(activeIndex) + '_' + variant;
-  } else {
-    key = topic + '_' + variant;
-  }
-  
-  const qset = POOL[key] || [];
-  const qDivs = Array.from(panelBody.querySelectorAll('.q'));
-  
+  if(activeIndex===null)return;
+  const topic=GRID_TOPICS[activeIndex],questionSets=POOL[topic]||[],qset=questionSets[currentLoadedSetId]||[];
+  const qDivs=Array.from(panelBody.querySelectorAll('.q'));
   qset.forEach((q,i)=>{
-    const qdiv = qDivs[i];
-    if(!qdiv) return;
-    
+    const qdiv=qDivs[i];if(!qdiv)return;
     if(q.type==='mcq'){
-      const all = qdiv.querySelectorAll('.choice');
-      all.forEach(ch=>{
-        ch.classList.remove('selected','wrong');
-        if(Number(ch.dataset.sel)===q.a){
-          ch.classList.add('correct');
-        }
-      });
-    } else if(q.type==='gap'){
-      const inp = qdiv.querySelector('input');
-      inp.value = q.a;
-      inp.classList.remove('wrong');
-      inp.classList.add('correct');
-    } else if(q.type==='match'){
-      // Clear all current selections
-      const choices = qdiv.querySelectorAll('.choice');
-      choices.forEach(ch=>{
-        ch.classList.remove('selected','matched','wrong');
-      });
-      
-      // Show correct pairs by highlighting them
-      q.pairs.forEach(pair=>{
-        choices.forEach(ch=>{
-          if(ch.dataset.value === pair[0] || ch.dataset.value === pair[1]){
-            ch.classList.add('correct');
-          }
-        });
-      });
-      
-      // Also store the correct pairs
-      const correctPairs = q.pairs.map(p => [p[0], p[1]]);
-      qdiv.dataset.pairs = JSON.stringify(correctPairs);
-      matchingState.pairs = correctPairs;
+      const all=qdiv.querySelectorAll('.choice');
+      all.forEach(ch=>{ch.classList.remove('selected','wrong');if(Number(ch.dataset.sel)===q.a)ch.classList.add('correct');});
+    }else if(q.type==='match'){
+      const choices=qdiv.querySelectorAll('.choice');
+      choices.forEach(ch=>ch.classList.remove('selected','matched','wrong'));
+      q.pairs.forEach(pair=>choices.forEach(ch=>{if(ch.dataset.value===pair[0]||ch.dataset.value===pair[1])ch.classList.add('correct');}));
+      qdiv.dataset.pairs=JSON.stringify(q.pairs.map(p=>[p[0],p[1]]));
     }
   });
 }
 
-function renderQuestions(topic,index){
+function renderQuestions(qset){
   panelBody.innerHTML='';
-  
-  // Determine which variant to use
-  const cellKey = `${currentSet}-${index}`;
-  let variant = cellAttempts[cellKey] || 'A';
-  
-  // Get the key with variant suffix
-  let key;
-  if(topic==='English'){
-    key = englishVariant(index) + '_' + variant;
-  } else {
-    key = topic + '_' + variant;
-  }
-  
-  const qset = POOL[key]||[];
   qset.forEach((q,i)=>{
-    const qdiv=document.createElement('div');
-    qdiv.className='q';
-    qdiv.dataset.qindex=i;
-    const h=document.createElement('h4');
-    h.textContent = `Q${i+1}. ${q.q}`;
-    qdiv.appendChild(h);
-    
+    const qdiv=document.createElement('div');qdiv.className='q';qdiv.dataset.qindex=i;
+    const h=document.createElement('h4');h.textContent=`Q${i+1}. ${q.q}`;qdiv.appendChild(h);
     if(q.type==='mcq'){
-      const ch=document.createElement('div');
-      ch.className='choices';
+      const ch=document.createElement('div');ch.className='choices';
       q.opts.forEach((opt,oi)=>{
-        const b=document.createElement('button');
-        b.className='choice';
-        b.textContent=opt;
-        b.dataset.sel=oi;
-        b.addEventListener('click',()=>onSelectChoice(b,q,i));
-        ch.appendChild(b);
+        const b=document.createElement('button');b.className='choice';b.textContent=opt;b.dataset.sel=oi;
+        b.addEventListener('click',()=>onSelectChoice(b,q,i));ch.appendChild(b);
       });
       qdiv.appendChild(ch);
-    } else if(q.type==='gap'){
-      const inp=document.createElement('input');
-      inp.className='choice input';
-      inp.placeholder='Type your answer here';
-      inp.addEventListener('input',()=>onTextInput(inp,q));
-      qdiv.appendChild(inp);
-    } else if(q.type==='match'){
-      const container=document.createElement('div');
-      container.className='matchContainer';
-      
-      const left = document.createElement('div');
-      left.className='matchLeft';
-      const shuffledLeft = q.pairs.slice().sort(()=>0.5-Math.random());
+    }else if(q.type==='match'){
+      const container=document.createElement('div');container.className='matchContainer';
+      const left=document.createElement('div');left.className='matchLeft';
+      const shuffledLeft=q.pairs.slice().sort(()=>0.5-Math.random());
       shuffledLeft.forEach((p,pi)=>{
-        const item=document.createElement('button');
-        item.className='choice';
-        item.textContent=p[0];
-        item.dataset.value=p[0];
-        item.dataset.side='left';
-        item.dataset.leftindex=pi;
-        item.addEventListener('click',()=>onMatchClick(item,qdiv,q));
-        left.appendChild(item);
+        const item=document.createElement('button');item.className='choice';item.textContent=p[0];
+        item.dataset.value=p[0];item.dataset.side='left';item.dataset.leftindex=pi;
+        item.addEventListener('click',()=>onMatchClick(item,qdiv,q));left.appendChild(item);
       });
-      
-      const right=document.createElement('div');
-      right.className='matchRight';
-      const shuffledRight = q.pairs.slice().sort(()=>0.5-Math.random());
+      const right=document.createElement('div');right.className='matchRight';
+      const shuffledRight=q.pairs.slice().sort(()=>0.5-Math.random());
       shuffledRight.forEach((p,pi)=>{
-        const b=document.createElement('button');
-        b.className='choice';
-        b.textContent=p[1];
-        b.dataset.value=p[1];
-        b.dataset.side='right';
-        b.dataset.rightindex=pi;
-        b.addEventListener('click',()=>onMatchClick(b,qdiv,q));
-        right.appendChild(b);
+        const b=document.createElement('button');b.className='choice';b.textContent=p[1];
+        b.dataset.value=p[1];b.dataset.side='right';b.dataset.rightindex=pi;
+        b.addEventListener('click',()=>onMatchClick(b,qdiv,q));right.appendChild(b);
       });
-      
-      container.appendChild(left);
-      container.appendChild(right);
-      qdiv.appendChild(container);
+      container.append(left,right);qdiv.appendChild(container);
     }
     panelBody.appendChild(qdiv);
   });
 }
 
-function englishVariant(index){
-  // Map each set to its English variant
-  const setEnglishMap = {
-    1: 'English_set1_grammar',    // Set 1: Conditionals/Grammar
-    2: 'English_set2_vocabulary', // Set 2: Vocabulary
-    3: 'English_set3_phrasal'     // Set 3: Phrasal Verbs
-  };
-  return setEnglishMap[currentSet];
-}
-
 function onSelectChoice(btn,q,i){
-  const parent = btn.parentElement;
+  const parent=btn.parentElement;
   parent.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));
-  btn.classList.add('selected');
-  btn.closest('.q').dataset.selected = btn.dataset.sel;
+  btn.classList.add('selected');btn.closest('.q').dataset.selected=btn.dataset.sel;
 }
 
-function onTextInput(inp,q){
-  // Just allow typing
-}
-
-function onMatchClick(btn, qdiv, q){
-  if(btn.classList.contains('matched')) return;
-  
-  if(!matchingState.firstClick){
-    // First click - select any item
-    btn.classList.add('selected');
-    matchingState.firstClick = btn;
-  } else if(btn === matchingState.firstClick){
-    // Clicking same button - deselect
-    btn.classList.remove('selected');
-    matchingState.firstClick = null;
-  } else if(btn.dataset.side === matchingState.firstClick.dataset.side){
-    // Clicking another item on the same side - switch selection
-    matchingState.firstClick.classList.remove('selected');
-    btn.classList.add('selected');
-    matchingState.firstClick = btn;
-  } else {
-    // Second click on opposite side - create pair
-    const first = matchingState.firstClick;
-    const second = btn;
-    
-    first.classList.remove('selected');
-    first.classList.add('matched');
-    second.classList.add('matched');
-    
-    matchingState.pairs.push([first.dataset.value, second.dataset.value]);
-    matchingState.firstClick = null;
-    
-    // Store pairs in qdiv
-    qdiv.dataset.pairs = JSON.stringify(matchingState.pairs);
+function onMatchClick(btn,qdiv,q){
+  if(btn.classList.contains('matched'))return;
+  if(!matchingState.firstClick){btn.classList.add('selected');matchingState.firstClick=btn;}
+  else if(btn===matchingState.firstClick){btn.classList.remove('selected');matchingState.firstClick=null;}
+  else if(btn.dataset.side===matchingState.firstClick.dataset.side){
+    matchingState.firstClick.classList.remove('selected');btn.classList.add('selected');matchingState.firstClick=btn;
+  }else{
+    const first=matchingState.firstClick,second=btn;
+    first.classList.remove('selected');first.classList.add('matched');second.classList.add('matched');
+    matchingState.pairs.push([first.dataset.value,second.dataset.value]);matchingState.firstClick=null;
+    qdiv.dataset.pairs=JSON.stringify(matchingState.pairs);
   }
 }
-
-document.getElementById('submitBtn').addEventListener('click',submitAnswers);
 
 function submitAnswers(){
-  if(activeIndex===null) return;
-  const col = activeIndex % 3;
-  const topic = labels[currentSet-1][col];
-  
-  // Determine current variant
-  const cellKey = `${currentSet}-${activeIndex}`;
-  let variant = cellAttempts[cellKey] || 'A';
-  
-  // Get the key with variant suffix
-  let key;
-  if(topic==='English'){
-    key = englishVariant(activeIndex) + '_' + variant;
-  } else {
-    key = topic + '_' + variant;
-  }
-  
-  const qset = POOL[key] || [];
-  const qDivs = Array.from(panelBody.querySelectorAll('.q'));
-  let correctCount=0;
-  
+  if(activeIndex===null)return;
+  const topic=GRID_TOPICS[activeIndex],questionSets=POOL[topic]||[],qset=questionSets[currentLoadedSetId]||[];
+  const qDivs=Array.from(panelBody.querySelectorAll('.q'));let correctCount=0;
   qset.forEach((q,i)=>{
-    const qdiv = qDivs[i];
-    if(!qdiv) return;
-    
+    const qdiv=qDivs[i];if(!qdiv)return;
     if(q.type==='mcq'){
-      const sel = qdiv.querySelector('.choice.selected');
-      if(sel && Number(sel.dataset.sel)===q.a){
-        correctCount++;
-        sel.classList.add('correct');
-      } else {
-        if(sel) sel.classList.add('wrong');
-        const all = qdiv.querySelectorAll('.choice');
-        all.forEach(ch=>{
-          if(Number(ch.dataset.sel)===q.a) ch.classList.add('correct');
-        });
-      }
-    } else if(q.type==='gap'){
-      const inp = qdiv.querySelector('input');
-      const val = inp.value.trim().toLowerCase().replace(/\s+/g, ' ');
-      const answer = String(q.a).toLowerCase().trim();
-      if(val===answer){
-        correctCount++;
-        inp.classList.add('correct');
-      } else {
-        inp.classList.add('wrong');
-      }
-    } else if(q.type==='match'){
-      const pairs = JSON.parse(qdiv.dataset.pairs || '[]');
-      let allCorrect = true;
-      
-      if(pairs.length !== q.pairs.length){
-        allCorrect = false;
-      } else {
-        // Check if all pairs match
-        pairs.forEach(userPair => {
-          const found = q.pairs.some(correctPair => 
-            userPair.includes(correctPair[0]) && userPair.includes(correctPair[1])
-          );
-          if(!found) allCorrect = false;
-        });
-      }
-      
-      const choices = qdiv.querySelectorAll('.choice');
-      if(allCorrect){
-        correctCount++;
-        choices.forEach(ch => ch.classList.add('correct'));
-      } else {
-        choices.forEach(ch => {
-          if(ch.classList.contains('matched')){
-            ch.classList.add('wrong');
-          }
-        });
-      }
+      const sel=qdiv.querySelector('.choice.selected');
+      if(sel&&Number(sel.dataset.sel)===q.a){correctCount++;sel.classList.add('correct');}
+      else{if(sel)sel.classList.add('wrong');
+        qdiv.querySelectorAll('.choice').forEach(ch=>{if(Number(ch.dataset.sel)===q.a)ch.classList.add('correct');});}
+    }else if(q.type==='match'){
+      const pairs=JSON.parse(qdiv.dataset.pairs||'[]');let allCorrect=true;
+      if(pairs.length!==q.pairs.length)allCorrect=false;
+      else pairs.forEach(userPair=>{if(!q.pairs.some(correctPair=>userPair.includes(correctPair[0])&&userPair.includes(correctPair[1])))allCorrect=false;});
+      const choices=qdiv.querySelectorAll('.choice');
+      if(allCorrect){correctCount++;choices.forEach(ch=>ch.classList.add('correct'));}
+      else choices.forEach(ch=>{if(ch.classList.contains('matched'))ch.classList.add('wrong');});
     }
   });
-  
-  const perfect = correctCount===qset.length;
-  if(perfect){
-    awardTile(activeIndex);
-  } else {
-    // Switch to variant B for next attempt if they failed with variant A
-    if(variant === 'A'){
-      cellAttempts[cellKey] = 'B';
-    }
-    // If they failed with B, keep it at B (they'll see different questions each time due to randomization)
-  }
-  
-  setTimeout(()=>{
-    clearPanelVisuals();
-    closeModal();
-    if(perfect) flashCellPerfect(activeIndex);
-  },1800);
+  const perfect=correctCount===qset.length;
+  if(perfect)awardTile(activeIndex);
+  setTimeout(()=>{clearPanelVisuals();closeModal();if(perfect)flashCellPerfect(activeIndex);},1800);
 }
 
 function clearPanelVisuals(){
   panelBody.querySelectorAll('.q').forEach(q=>{
-    q.querySelectorAll('.choice').forEach(ch=>{
-      ch.classList.remove('wrong','correct','selected','matched');
-    });
-    const inp = q.querySelector('input');
-    if(inp) {
-      inp.classList.remove('wrong','correct');
-      inp.value='';
-    }
-    q.dataset.pairs = '';
+    q.querySelectorAll('.choice').forEach(ch=>ch.classList.remove('wrong','correct','selected','matched'));
+    q.dataset.pairs='';
   });
-  matchingState = {firstClick: null, pairs: [], answered: false};
+  matchingState={firstClick:null,pairs:[],answered:false};
 }
 
 function flashCellPerfect(idx){
-  const cell = document.querySelector(`.cell[data-index='${idx}']`);
-  cell.classList.add('perfect');
-  setTimeout(()=>cell.classList.remove('perfect'),600);
+  const cell=document.querySelector(`.cell[data-index='${idx}']`);
+  cell.classList.add('perfect');setTimeout(()=>cell.classList.remove('perfect'),600);
 }
 
 function awardTile(idx){
-  boardState[idx]={owner:playerTurn,perfect:true};
-  renderBoard();
-  scores[playerTurn] = (scores[playerTurn]||0)+1;
-  document.getElementById(playerTurn==='X'?'scoreX':'scoreO').textContent = scores[playerTurn];
-  localStorage.setItem('intuity_scores', JSON.stringify(scores));
-  playCorrect();
-  checkWin();
-  playerTurn = playerTurn==='X'?'O':'X';
-  document.getElementById('turnLabel').textContent = playerTurn;
+  boardState[idx]={owner:playerTurn,perfect:true};renderBoard();
+  scores[playerTurn]=(scores[playerTurn]||0)+1;
+  document.getElementById(playerTurn==='X'?'scoreX':'scoreO').textContent=scores[playerTurn];
+  localStorage.setItem('intuity_scores',JSON.stringify(scores));playCorrect();checkWin();
+  playerTurn=playerTurn==='X'?'O':'X';document.getElementById('turnLabel').textContent=playerTurn;
   updatePlayerHighlight();
 }
 
 function renderBoard(){
   document.querySelectorAll('.cell').forEach((cell,i)=>{
-    const s=boardState[i];
-    const sym=cell.querySelector('.symbol');
+    const s=boardState[i],sym=cell.querySelector('.symbol');
     cell.classList.remove('claimed-X','claimed-O');
-    if(s){
-      cell.classList.add('claimed-'+s.owner);
-      sym.textContent = s.owner==='X'? '✖' : '⭕';
-    } else {
-      sym.textContent='+';
-    }
+    if(s){cell.classList.add('claimed-'+s.owner);sym.textContent=s.owner==='X'?'✖':'⭕';}
+    else sym.textContent='+';
   });
 }
 
-const WINS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-
+const WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 function checkWin(){
-  const owners = boardState.map(v=>v? v.owner : null);
+  const owners=boardState.map(v=>v?v.owner:null);
   for(const line of WINS){
-    if(line.every(i=>owners[i]===owners[line[0]] && owners[i]!==null)){
-      drawLine(line);
-      showTrophy();
-      break;
-    }
+    if(line.every(i=>owners[i]===owners[line[0]]&&owners[i]!==null)){drawLine(line);showTrophy();break;}
   }
 }
 
 function drawLine(line){
-  const svg = document.querySelector('.svgOverlay');
-  svg.innerHTML='';
-  const cells = Array.from(document.querySelectorAll('.cell'));
-  const p1 = centerOf(cells[line[0]]);
-  const p3 = centerOf(cells[line[2]]);
-  const gridRect = grid.getBoundingClientRect();
-  const scaleX = 300 / gridRect.width;
-  const scaleY = 300 / gridRect.height;
-  const x1=(p1.x-gridRect.left)*scaleX;
-  const y1=(p1.y-gridRect.top)*scaleY;
-  const x2=(p3.x-gridRect.left)*scaleX;
-  const y2=(p3.y-gridRect.top)*scaleY;
+  const svg=document.querySelector('.svgOverlay');svg.innerHTML='';
+  const cells=Array.from(document.querySelectorAll('.cell'));
+  const p1=centerOf(cells[line[0]]),p3=centerOf(cells[line[2]]);
+  const gridRect=grid.getBoundingClientRect(),scaleX=300/gridRect.width,scaleY=300/gridRect.height;
+  const x1=(p1.x-gridRect.left)*scaleX,y1=(p1.y-gridRect.top)*scaleY;
+  const x2=(p3.x-gridRect.left)*scaleX,y2=(p3.y-gridRect.top)*scaleY;
   const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
-  ln.setAttribute('x1',x1);
-  ln.setAttribute('y1',y1);
-  ln.setAttribute('x2',x2);
-  ln.setAttribute('y2',y2);
-  ln.classList.add('line');
-  svg.appendChild(ln);
-  setTimeout(()=>ln.style.strokeDashoffset='0',60);
-  winsDrawn=true;
+  ln.setAttribute('x1',x1);ln.setAttribute('y1',y1);ln.setAttribute('x2',x2);ln.setAttribute('y2',y2);
+  ln.classList.add('line');svg.appendChild(ln);setTimeout(()=>ln.style.strokeDashoffset='0',60);winsDrawn=true;
 }
 
-function centerOf(el){
-  const r=el.getBoundingClientRect();
-  return {x:(r.left+r.right)/2,y:(r.top+r.bottom)/2};
-}
-
+function centerOf(el){const r=el.getBoundingClientRect();return{x:(r.left+r.right)/2,y:(r.top+r.bottom)/2};}
 function showTrophy(){
-  const t=document.getElementById('trophy');
-  t.classList.add('show');
-  playWin();
+  const t=document.getElementById('trophy');t.classList.add('show');playWin();
   setTimeout(()=>t.classList.remove('show'),3800);
 }
 
 document.getElementById('resetBtn').addEventListener('click',()=>{
-  boardState=Array(9).fill(null);
-  playerTurn='X';
-  scores={X:0,O:0};
+  boardState=Array(9).fill(null);playerTurn='X';cellAttempts={};scores={X:0,O:0};
   localStorage.setItem('intuity_scores',JSON.stringify(scores));
-  document.getElementById('scoreX').textContent='0';
-  document.getElementById('scoreO').textContent='0';
-  document.getElementById('turnLabel').textContent='X';
-  document.querySelector('.svgOverlay').innerHTML='';
-  updatePlayerHighlight();
-  renderBoard();
+  document.getElementById('scoreX').textContent='0';document.getElementById('scoreO').textContent='0';
+  document.getElementById('turnLabel').textContent='X';document.querySelector('.svgOverlay').innerHTML='';
+  updatePlayerHighlight();renderBoard();
 });
 
-const audioCtx = (window.AudioContext||window.webkitAudioContext)? new (window.AudioContext||window.webkitAudioContext)():null;
-
+const audioCtx=(window.AudioContext||window.webkitAudioContext)?new(window.AudioContext||window.webkitAudioContext)():null;
 function playTone(freq,dur){
-  if(!audioCtx) return;
-  const o=audioCtx.createOscillator();
-  const g=audioCtx.createGain();
-  o.type='sine';
-  o.frequency.value=freq;
-  g.gain.value=0.02;
-  o.connect(g);
-  g.connect(audioCtx.destination);
-  o.start();
-  o.stop(audioCtx.currentTime+dur);
+  if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type='sine';o.frequency.value=freq;g.gain.value=0.02;o.connect(g);g.connect(audioCtx.destination);
+  o.start();o.stop(audioCtx.currentTime+dur);
 }
+function playCorrect(){playTone(1100,0.09);setTimeout(()=>playTone(1300,0.09),100);}
+function playWin(){playTone(1200,0.12);setTimeout(()=>playTone(1400,0.12),140);setTimeout(()=>playTone(1600,0.15),280);}
+function vibrate(ms){if(navigator.vibrate)navigator.vibrate(ms);}
 
-function playCorrect(){
-  playTone(1100,0.09);
-  setTimeout(()=>playTone(1300,0.09),100);
-}
-
-function playWin(){
-  playTone(1200,0.12);
-  setTimeout(()=>playTone(1400,0.12),140);
-  setTimeout(()=>playTone(1600,0.15),280);
-}
-
-function vibrate(ms){
-  if(navigator.vibrate) navigator.vibrate(ms);
-}
-
+document.getElementById('closeBtn').addEventListener('click',closeModal);
+document.getElementById('showAnswersBtn').addEventListener('click',showAnswers);
+document.getElementById('submitBtn').addEventListener('click',submitAnswers);
 document.querySelectorAll('.cell').forEach(c=>c.addEventListener('click',()=>{
-  const idx = +c.dataset.index;
-  if(boardState[idx] && boardState[idx].perfect) return;
-  vibrate(10);
-  playTone(800,0.03);
-  openModal(idx);
+  const idx=+c.dataset.index;if(boardState[idx]&&boardState[idx].perfect)return;
+  vibrate(10);playTone(800,0.03);openModal(idx);
 }));
 
-window.__INTUITY = {boardState, scores, reset:()=>document.getElementById('resetBtn').click()};
-
-updateCellLabels();
-renderBoard();
-document.getElementById('scoreX').textContent = scores.X;
-document.getElementById('scoreO').textContent = scores.O;
+updatePlayerHighlight();renderBoard();
+document.getElementById('scoreX').textContent=scores.X;
+document.getElementById('scoreO').textContent=scores.O;
 </script>
 </body>
 </html>
